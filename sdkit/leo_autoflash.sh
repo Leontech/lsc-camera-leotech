@@ -35,6 +35,13 @@ check_layout() {
     grep -q '^mtd6: 00040000 00001000 "CONFIG"$' /proc/mtd && \
     grep -q '^mtd7: 00500000 00001000 "APP"$' /proc/mtd
 }
+# kernel + rootfs must be a known (tested) version - a vendor online update could change them
+KMD5=$(md5sum /dev/mtdblock4 | awk '{print $1}'); RMD5F=$(md5sum /dev/mtdblock5 | awk '{print $1}')
+echo "kernel md5 $KMD5 rootfs md5 $RMD5F"
+if [ -f "$L/system_md5.txt" ] && ! { grep -qi "^$KMD5 .*kernel" "$L/system_md5.txt" && grep -qi "^$RMD5F .*rootfs" "$L/system_md5.txt"; }; then
+    echo "unknown kernel/rootfs version - nothing written (please report these MD5s)"
+    UNKNOWN_SYSTEM=1
+fi
 if ! check_layout; then
     echo "unsupported flash layout:"; cat /proc/mtd
     say sd_unsupported; exit 1
@@ -75,6 +82,8 @@ if [ -f "$RS/mtdblock7.bin" ]; then
     if [ $? -eq 0 ]; then /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; reboot; exit 2; fi
     /tmp/leo_say "$L/voice/sd_fatal.adp"; exit 3
 fi
+
+if [ "${UNKNOWN_SYSTEM:-0}" = "1" ]; then say sd_unsupported; exit 1; fi
 
 IMG=""
 for f in "$L"/firmware/ak_rtsp_firmware_*.squashfs; do [ -f "$f" ] && IMG="$f"; done

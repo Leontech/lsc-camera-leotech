@@ -22,6 +22,11 @@
 > (žádná aplikace, cloudové nahrávání ani notifikace, licence/párování Tuya se nepoužívá).
 > Kdykoli se dá vrátit – **[návod na návrat původního firmwaru](docs/RESTORE.md)**.
 
+> 💡 **Do not connect a new camera to the LSC Smart Connect app / cloud before installing.** It may download a newer
+> firmware over the internet that has **not been tested** – the installer would refuse it (nothing is written).
+> 💡 **Novou kameru před instalací nepřipojuj k aplikaci LSC / cloudu.** Může si stáhnout novější firmware, který
+> **není otestovaný** – instalátor ho odmítne (nic nezapíše).
+
 > ⚠️ **USE AT YOUR OWN RISK.** Flashing custom firmware can permanently brick the camera, void the warranty and
 > violate the terms of the original app/cloud. Everything here is provided **"AS IS", without any warranty**, and
 > **the authors accept no responsibility or liability** for any damage, data loss or other consequences. Make your
@@ -63,15 +68,15 @@ version is refused and **nothing is written**.
 
 | Step | Needs |
 |---|---|
-| First install on a stock camera | microSD card (FAT32), see [docs/INSTALL.md](docs/INSTALL.md) |
+| First install on a stock camera | microSD card (FAT32) prepared on **[the SD card page](https://leontech.github.io/lsc-camera-leotech/)** – the camera builds the firmware itself from its own original firmware ([INSTALL.md](docs/INSTALL.md)) |
 | Updates | the camera's web page (System → Firmware update) |
 | **Back to the original firmware** | [docs/RESTORE.md](docs/RESTORE.md) – web page or SD card, from your backup |
 | Building from source | Linux (or WSL), see [docs/BUILD.md](docs/BUILD.md) |
 
-**Why is there no ready-made firmware image to download?** The image is built from the camera's *own* original
-firmware (kernel modules, Anyka libraries) which belongs to the manufacturer and cannot be redistributed. This
-repository only contains open-source code; you build the image from the backup of your own camera, exactly like
-the upstream project does.
+**Why is there no ready-made firmware image to download?** The image contains parts of the camera's *own* original
+firmware (kernel modules, Anyka libraries) which belong to the manufacturer and cannot be redistributed. So the
+camera builds the image itself: it backs up its original firmware to the card, unpacks it, removes the Tuya app,
+adds ak_rtsp and packs the new image – no PC tools needed.
 
 ## Credits & licences
 
@@ -106,11 +111,12 @@ Verze `.1`/`.2` mají stejný čip Anyka a pravděpodobně budou fungovat; kamer
 Instalátor kontroluje rozložení flash a přesné MD5 původního firmwaru – neznámou kameru/verzi odmítne a **nic nezapíše**.
 
 - **Původní aplikace LSC Smart Connect a cloud Tuya po instalaci nefungují.** Návrat: [docs/RESTORE.md](docs/RESTORE.md)
-- **Instalace:** microSD karta (FAT32) – [docs/INSTALL.md](docs/INSTALL.md)
+- **Novou kameru před instalací nepřipojuj k aplikaci LSC / cloudu** – může stáhnout nový, neotestovaný firmware.
+- **Instalace:** microSD karta (FAT32) připravená na [stránce pro kartu](https://leontech.github.io/lsc-camera-leotech/) – firmware si kamera sestaví sama ze svého originálu ([docs/INSTALL.md](docs/INSTALL.md))
 - **Aktualizace:** webová stránka kamery (Systém → Aktualizace firmwaru)
 - **Sestavení ze zdrojáků:** Linux / WSL – [docs/BUILD.md](docs/BUILD.md)
-- **Proč tu není hotový obraz ke stažení?** Obraz obsahuje části původního firmwaru výrobce (moduly jádra, knihovny
-  Anyka), které nesmíme šířit. Každý si ho sestaví ze zálohy své vlastní kamery.
+- **Proč tu není hotový obraz ke stažení?** Obraz obsahuje části původního firmwaru výrobce, které nesmíme šířit – proto
+  si ho kamera sestaví sama ze zálohy svého originálu.
 
 Projekt nemá nic společného s firmami Action, LSC, Tuya ani Anyka.
 Pokud ti to ušetřilo čas: [☕ ko-fi.com/leotechcz](https://ko-fi.com/leotechcz) · [leotech.cz](https://leotech.cz)
