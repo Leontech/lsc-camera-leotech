@@ -19,7 +19,7 @@ Action **LSC Smart Connect** indoor IP camera 1080p, item **3215672**, label "No
 The upstream wizard [4ddict/Action-Smart-Connect-Flasher](https://github.com/4ddict/Action-Smart-Connect-Flasher) makes the backup and installs the base ak_rtsp firmware; afterwards upload the leotech image on the camera's web page (System → Firmware update) or via `ota_push.py`.
 
 ## Updates
-Camera web page → System → Firmware update (MD5 check, automatic rollback).
+Camera web page → System → Firmware update (MD5 check, automatic rollback). The SD card is only for converting the original firmware: a camera that already runs the leotech firmware just says "already installed" and nothing is written.
 
 ## Reset button
 short press = says the IP address (English + Czech) · 2 s = Wi-Fi via QR · 5 s = clear web password · 15 s = defaults (image, MQTT, password) + restart. Wi-Fi is never erased.

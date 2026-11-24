@@ -157,6 +157,16 @@ else
     if [ -f "$L/state/$MAC.built" ] && [ "$(cat "$L/state/$MAC.built")" = "$CUR $PAY" ]; then
         echo "this build is already installed - silent"; exit 0
     fi
+    # the SD card only converts the ORIGINAL firmware; a camera that already runs leotech firmware is
+    # updated over its web page, never rebuilt from the card (so an inserted card cannot overwrite it)
+    if ! grep -qi "^$CUR" "$L/stock_md5.txt" 2>/dev/null; then
+        if [ -x /usr/bin/ak_rtsp ]; then
+            echo "leotech firmware already installed - nothing to do (updates: camera web page)"
+            if [ ! -f "$L/state/$MAC.already.$CUR" ]; then touch "$L/state/$MAC.already.$CUR"; sync; say sd_already; fi
+            exit 0
+        fi
+        echo "current APP is neither original nor leotech - nothing written"; say sd_unsupported; exit 1
+    fi
     stop_app
     say sd_hello
     STOCKSRC=""
@@ -167,9 +177,6 @@ else
             for i in 0 1 2 3 4 5 6 7; do dd if=/dev/mtdblock$i of="$BK/mtdblock$i.bin" bs=64k 2>/dev/null; done
             (cd "$BK" && md5sum mtdblock*.bin > md5sums.txt); sync
         fi
-        STOCKSRC="$BK/mtdblock7.bin"
-    elif [ -f "$BK/mtdblock7.bin" ] && grep -qi "^$(md5sum "$BK/mtdblock7.bin" | awk '{print $1}')" "$L/stock_md5.txt"; then
-        # already custom firmware, original backup of THIS camera is on the card -> rebuild (update)
         STOCKSRC="$BK/mtdblock7.bin"
     fi
     if [ -z "$STOCKSRC" ]; then echo "no original firmware backup for this camera - nothing written"; say sd_unsupported; exit 1; fi
