@@ -84,6 +84,7 @@ if [ -f "$RS/mtdblock7.bin" ]; then
     RC=$?; tail -n 3 /tmp/leo_flash.log
     if [ "$RC" -eq 0 ]; then
         mv "$RS" "$L/restore.done.$(date +%s)" 2>/dev/null; sync
+        echo "$RMD5" > "$L/state/$MAC.restored"; sync   # do not install again from this card
         echo "ORIGINAL FIRMWARE RESTORED -> reboot"
         /tmp/leo_say "$L/voice/sd_restored.adp"; sync; sleep 2; reboot; exit 0
     fi
@@ -101,6 +102,11 @@ CUR=$(md5sum /dev/mtdblock7 | awk '{print $1}')
 echo "current APP md5 $CUR"
 BK="$L/backup/$MAC"
 mkdir -p "$BK"
+# the original firmware was restored from this card and is still running -> do not reinstall
+# (the SD page deletes this marker when the card is written for installing again)
+if [ -f "$L/state/$MAC.restored" ] && [ "$(cat "$L/state/$MAC.restored")" = "$CUR" ]; then
+    echo "original firmware restored from this card - not installing again"; exit 0
+fi
 
 if [ -n "$IMG" ]; then
     # ---------- prebuilt image on the card (private kit) ----------
@@ -175,6 +181,8 @@ tail -n 3 /tmp/leo_flash.log
 if [ "$RC" -eq 0 ]; then
     touch "$L/state/$MAC.$NEW"
     [ "$KIND" = "built" ] && echo "$NEW $PAY" > "$L/state/$MAC.built"
+    sync
+    rm -f /etc/config/leo_fw_seen   # the new firmware announces itself after the restart
     sync
     echo "FLASH OK -> reboot"
     /tmp/leo_say "$L/voice/sd_done.adp"

@@ -139,13 +139,14 @@ async function makeZip(items){const parts=[],cd=[];let off=0;
   cd.push(c.buffer,name);off+=30+name.length+data.length}
  const cdl=cd.reduce((a,x)=>a+(x.byteLength||x.length),0);const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,1);e.setUint16(8,items.length,1);e.setUint16(10,items.length,1);e.setUint32(12,cdl,1);e.setUint32(16,off,1);
  return new Blob([...parts,...cd,e.buffer],{type:'application/zip'})}
-async function finishBlocked(box){if(!blocked.length)return false;
- const blob=await makeZip(blocked);const url=URL.createObjectURL(blob);const fn='lsc_karta_doplnek.zip';
+async function finishBlocked(box,root){if(!blocked.length)return false;
+ const blob=await makeZip(blocked);const fn='DOPLNEK_lsc.zip';let onCard=false;
+ try{const fh=await root.getFileHandle(fn,{create:true});const w=await fh.createWritable();await w.write(blob);await w.close();onCard=true}catch(e){}
  const d=document.createElement('div');d.className='zipbox';
- d.innerHTML=T('<b>⚠ Ještě jeden krok:</b> Chrome nedovolí webu zapsat '+blocked.length+' soubor(y) (např. *.ini). Jsou v ZIPu – <b>otevři ho a jeho obsah zkopíruj do kořene karty</b> (přepsat). Soubory: ',
-  '<b>⚠ One more step:</b> Chrome does not let a web page write '+blocked.length+' file(s) (e.g. *.ini). They are in a ZIP – <b>open it and copy its content to the root of the card</b> (overwrite). Files: ')+'<code>'+blocked.map(b=>b.path).join('</code> <code>')+'</code><br>';
- const a=document.createElement('a');a.href=url;a.download=fn;a.className='btn';a.style.cssText='display:inline-block;margin-top:8px;text-decoration:none';a.textContent=T('Stáhnout ','Download ')+fn;d.appendChild(a);box.appendChild(d);
- try{a.click()}catch(e){}return true}
+ d.innerHTML=T('<b>⚠ Ještě jeden krok:</b> Chrome nedovolí webu zapsat '+blocked.length+' soubor(y) *.ini. '+(onCard?'Jsou v souboru <b>'+fn+'</b> přímo na kartě.':'Jsou v ZIPu ke stažení níže.')+'<br>Na kartě: dvakrát klikni na <b>'+fn+'</b> → <b>Ctrl+A</b> → <b>Ctrl+C</b> → vrať se do kořene karty (např. F:\\) → <b>Ctrl+V</b> → „Nahradit soubory“. Soubory: ',
+  '<b>⚠ One more step:</b> Chrome does not let a web page write '+blocked.length+' *.ini file(s). '+(onCard?'They are in <b>'+fn+'</b> directly on the card.':'They are in the ZIP below.')+'<br>On the card: double-click <b>'+fn+'</b> → <b>Ctrl+A</b> → <b>Ctrl+C</b> → go back to the card root (e.g. F:\\) → <b>Ctrl+V</b> → "Replace the files". Files: ')+'<code>'+blocked.map(b=>b.path).join('</code> <code>')+'</code><br>';
+ if(!onCard){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;a.className='btn';a.style.cssText='display:inline-block;margin-top:8px;text-decoration:none';a.textContent=T('Stáhnout ','Download ')+fn;d.appendChild(a)}
+ box.appendChild(d);return true}
 let rbin=null,rmd5=null;
 $('#voice').onchange=e=>{$('#vinfo').textContent=e.target.files.length?('✓ '+e.target.files.length):''};
 $('#rfiles').onchange=async e=>{rbin=null;rmd5=null;for(const f of e.target.files){if(/mtdblock7\.bin$/i.test(f.name))rbin=f;if(/md5sums\.txt$/i.test(f.name))rmd5=f}
@@ -173,17 +174,18 @@ $('#rgo').onclick=async()=>{if(needAgree())return;if(!rbin){$('#rinfo').textCont
  const box=$('#rlog');box.textContent='';blocked=[];const lg=(t,c)=>{const d=document.createElement('div');d.textContent=t;if(c)d.className=c;box.appendChild(d)};
  $('#rgo').disabled=true;
  try{await writeKit(root,lg);await put(root,'leo/restore/mtdblock7.bin',rbin);lg('✓ leo/restore/mtdblock7.bin');if(rmd5){await put(root,'leo/restore/md5sums.txt',rmd5);lg('✓ leo/restore/md5sums.txt')}
-  const z=await finishBlocked(box);
-  lg(z?T('Po zkopírování ZIPu na kartu je hotovo – karta obnoví původní firmware.','After copying the ZIP to the card it is done – the card restores the original firmware.'):T('Hotovo – karta obnoví původní firmware. Vlož ji do vypnuté kamery a zapni.','Done – this card restores the original firmware. Insert it into the powered-off camera and switch on.'),'ok')}
+  const z=await finishBlocked(box,root);
+  lg(z?T('Po rozbalení DOPLNEK_lsc.zip na kartě je hotovo – karta obnoví původní firmware.','After extracting DOPLNEK_lsc.zip on the card it is done – the card restores the original firmware.'):T('Hotovo – karta obnoví původní firmware. Vlož ji do vypnuté kamery a zapni.','Done – this card restores the original firmware. Insert it into the powered-off camera and switch on.'),'ok')}
  catch(e){lg('✗ '+e.message,'bad')}
  $('#rgo').disabled=false};
 $('#go').onclick=async()=>{if(needAgree())return;let root;try{root=await window.showDirectoryPicker({mode:'readwrite',id:'lsc-sd'})}catch(e){return}
  $('#go').disabled=true;$('#log').textContent='';blocked=[];
+ try{const st=await (await root.getDirectoryHandle('leo')).getDirectoryHandle('state');const rm=[];for await(const [n] of st.entries())if(/\.restored$/.test(n))rm.push(n);for(const n of rm)await st.removeEntry(n)}catch(e){}
  try{
   await writeKit(root,log);
   if(img){await put(root,'leo/firmware/'+img.name,img);log('✓ leo/firmware/'+img.name)}else log(T('✓ firmware se sestaví v kameře','✓ firmware will be built in the camera'))
-  const z=await finishBlocked($('#log'));
-  log(z?T('Po zkopírování obsahu ZIPu na kartu je hotovo – kartu bezpečně odeber a vlož do vypnuté kamery.','After copying the ZIP content to the card it is done – safely eject the card and insert it into the powered-off camera.'):T('Hotovo – kartu bezpečně odeber a vlož do vypnuté kamery.','Done – safely eject the card and insert it into the powered-off camera.'),'ok');
+  const z=await finishBlocked($('#log'),root);
+  log(z?T('Po rozbalení '+'DOPLNEK_lsc.zip'+' na kartě je hotovo – kartu bezpečně odeber a vlož do vypnuté kamery.','After extracting DOPLNEK_lsc.zip on the card it is done – safely eject the card and insert it into the powered-off camera.'):T('Hotovo – kartu bezpečně odeber a vlož do vypnuté kamery.','Done – safely eject the card and insert it into the powered-off camera.'),'ok');
  }catch(e){log('✗ '+(e.message||e),'bad')}
  $('#go').disabled=false};
 </script></body></html>
