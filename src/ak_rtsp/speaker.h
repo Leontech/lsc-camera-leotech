@@ -33,3 +33,4 @@ int speaker_hide_builtin(const char *name);   /* "delete" built-in */
 int speaker_restore_builtins(void);
 int speaker_play_sys(const char *name);       /* system voice prompt */
 void speaker_say_ip(int interrupt);            /* LEO build24: IP address EN + CZ */
+void speaker_boot_announce_start(void);        /* LEO build25: "now running leotech fw" once per new fw, Wi-Fi help */

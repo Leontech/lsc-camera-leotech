@@ -11,17 +11,23 @@ PIPER=${PIPER:-piper}; VOICES=${VOICES:-$HOME/piper-voices}
 EN=$VOICES/en_GB-cori-high.onnx; CZ=$VOICES/cs_CZ-kasandra-medium.onnx
 mkdir -p out/sd out/sys; T=$(mktemp -d)
 tts(){ echo "$2" | $PIPER -m "$1" -f "$3" >/dev/null 2>&1; }
-fin(){ ffmpeg -v error -y -i "$1" -af "aresample=8000,loudnorm=I=-14:TP=-1.5,aresample=8000" -ac 1 -ar 8000 -f s16le $T/x.s16
- python3 adp.py $T/x.s16 "$2"; echo "$2"; }
-# bilingual prompt: English, short pause, Czech
-say(){ tts $EN "$3" $T/en.wav; tts $CZ "$4" $T/cz.wav
- ffmpeg -v error -y -i $T/en.wav -f lavfi -t 0.4 -i anullsrc=r=22050:cl=mono -i $T/cz.wav -filter_complex \
-  "[0:a]aresample=22050,aformat=channel_layouts=mono[a];[2:a]aresample=22050,aformat=channel_layouts=mono[c];[a][1:a][c]concat=n=3:v=0:a=1" $T/both.wav
+# trim leading/trailing breath and hiss of a TTS clip, short fades against clicks
+TRIM="silenceremove=start_periods=1:start_threshold=-40dB:start_silence=0.02,areverse,silenceremove=start_periods=1:start_threshold=-40dB:start_silence=0.02,areverse,afade=t=in:d=0.01,areverse,afade=t=in:d=0.03,areverse"
+trim(){ ffmpeg -v error -y -i "$1" -af "aresample=22050,aformat=channel_layouts=mono,$TRIM" "$2"; }
+# peak-normalise to -6 dBFS (louder distorts on the small speaker) with ONE gain for the whole clip (no dynamic loudness: it lifts the noise
+# in pauses), 100 Hz high-pass for the small speaker, 8 kHz mono s16 -> IMA-ADPCM
+fin(){ ffmpeg -v error -y -i "$1" -af "highpass=f=100,aresample=8000" -ac 1 -ar 8000 $T/n.wav
+ MX=$(ffmpeg -i $T/n.wav -af volumedetect -f null - 2>&1 | sed -n 's/.*max_volume: \(-*[0-9.]*\) dB.*/\1/p')
+ G=$(awk -v m="${MX:-0}" 'BEGIN{printf "%.2f", -6.0 - m}')
+ ffmpeg -v error -y -i $T/n.wav -af "volume=${G}dB" -ac 1 -ar 8000 -f s16le $T/x.s16
+ python3 adp.py $T/x.s16 "$2"; echo "$2 (gain ${G} dB)"; }
+# bilingual prompt: English, 0.45 s digital silence, Czech
+say(){ tts $EN "$3" $T/en.wav; tts $CZ "$4" $T/cz.wav; trim $T/en.wav $T/en_t.wav; trim $T/cz.wav $T/cz_t.wav
+ ffmpeg -v error -y -i $T/en_t.wav -f lavfi -t 0.45 -i anullsrc=r=22050:cl=mono -i $T/cz_t.wav -filter_complex \
+  "[0:a][1:a][2:a]concat=n=3:v=0:a=1" $T/both.wav
  fin $T/both.wav out/$1/$2.adp; }
 # single-language clip
-one(){ tts "$1" "$3" $T/one.wav
- ffmpeg -v error -y -i $T/one.wav -af "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse" $T/trim.wav
- fin $T/trim.wav out/sys/$2.adp; }
+one(){ tts "$1" "$3" $T/one.wav; trim $T/one.wav $T/trim.wav; fin $T/trim.wav out/sys/$2.adp; }
 
 # ---- SD installer
 say sd sd_hello "Memory card detected. Checking the camera." "Paměťová karta nalezena. Kontroluji kameru."
@@ -48,6 +54,8 @@ say sys qr_bad "This QR code does not contain Wi-Fi." "Tento QR kód neobsahuje 
 say sys pass_reset "The web password has been cleared." "Heslo webu bylo smazáno."
 say sys factory "Restoring default settings and restarting." "Obnovuji výchozí nastavení a restartuji."
 say sys ip_none "The camera is not connected to a network." "Kamera není připojena k síti."
+say sys fw_ready "The camera is now running the LSC leotech firmware." "Kamera nyní běží na firmwaru LSC leotech."
+say sys wifi_none "The camera is not connected to Wi-Fi. To set it up, hold the button for two seconds and show the camera the Wi-Fi QR code from your phone." "Kamera není připojená k Wi-Fi. Pro nastavení podržte tlačítko dvě sekundy a ukažte kameře QR kód Wi-Fi z mobilu."
 # ---- IP address clips (spoken in English, then in Czech)
 one $EN ip_en_intro "My IP address is"; one $EN ip_en_dot "dot"
 one $CZ ip_cz_intro "Moje IP adresa je"; one $CZ ip_cz_dot "tečka"

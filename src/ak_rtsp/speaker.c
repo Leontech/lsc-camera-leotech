@@ -164,6 +164,51 @@ void speaker_say_ip(int interrupt)
     say_ip_lang(ip, "en"); spk_gap(450); say_ip_lang(ip, "cz");
 }
 
+/* LEO build25: boot announcements
+ *  - first start of a new firmware version (after SD install / OTA): fw_ready
+ *    ("The camera is now running the LSC leotech firmware.") - remembered in /etc/config/leo_fw_seen
+ *  - no network 60 s after start: wifi_none (how to connect by QR code), repeated 2x every 5 min */
+#include <pthread.h>
+#include "qr.h"
+const char *build_version_string(void);
+#define LEO_FW_SEEN "/etc/config/leo_fw_seen"
+static int net_ok(void)
+{
+    const char *ip = net_ip_string();
+    return ip && ip[0] && ip[0] != '?' && strncmp(ip, "0.", 2);
+}
+static void *boot_announce(void *arg)
+{
+    (void)arg;
+    sleep(10);
+    const char *ver = build_version_string();
+    char old[160] = { 0 };
+    FILE *f = fopen(LEO_FW_SEEN, "r");
+    if (f) { if (!fgets(old, sizeof old, f)) old[0] = 0; fclose(f); }
+    old[strcspn(old, "\r\n")] = 0;
+    if (strcmp(old, ver)) {
+        printf("[speaker] first start of %s - announcing\n", ver);
+        speaker_play_sys("fw_ready");
+        f = fopen(LEO_FW_SEEN ".tmp", "w");
+        if (f) { fprintf(f, "%s\n", ver); fclose(f); rename(LEO_FW_SEEN ".tmp", LEO_FW_SEEN); sync(); }
+    }
+    sleep(50);
+    for (int n = 0; n < 3; n++) {
+        if (net_ok()) break;
+        if (!qr_running() && !speaker_is_playing()) {
+            printf("[speaker] no network - Wi-Fi help prompt\n");
+            speaker_play_sys("wifi_none");
+        }
+        for (int s = 0; s < 300 && !net_ok(); s++) sleep(1);
+    }
+    return NULL;
+}
+void speaker_boot_announce_start(void)
+{
+    pthread_t t;
+    if (pthread_create(&t, NULL, boot_announce, NULL) == 0) pthread_detach(t);
+}
+
 int speaker_play(const char *name)
 {
     if (!valid_name(name)) return -1;

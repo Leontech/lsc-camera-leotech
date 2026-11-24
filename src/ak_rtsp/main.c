@@ -285,7 +285,8 @@ int main(int argc, char **argv)
     speaker_start();
     mqtt_start();    /* LEO build13: MQTT + HA discovery */
     web_start();     /* LEO build13: web page port 80 */
-    button_start();  /* LEO build13: reset button */  /* LEO 2026-11-24: speaker amp GPIO + stream server 8093 */
+    button_start();  /* LEO build13: reset button */
+    speaker_boot_announce_start();  /* LEO build25: fw_ready / Wi-Fi help prompts */  /* LEO 2026-11-24: speaker amp GPIO + stream server 8093 */
     if (audio_start() < 0)
         printf("[ak_rtsp] audio: init failed, continuing video-only\n");
 

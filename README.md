@@ -60,6 +60,7 @@ version is refused and **nothing is written**.
   previous network if the new one does not connect
 - **Reset button** – short press: the camera **says its IP address** (EN + CZ) · 2 s QR Wi-Fi · 5 s clear web password · 15 s defaults (Wi-Fi is never erased)
 - After a successful Wi-Fi setup by QR code the camera also announces its new IP address
+- After installing/updating it says "The camera is now running the LSC leotech firmware"; without Wi-Fi it explains (about a minute after power-on) how to connect it by QR code
 - **Voice prompts** (English + Czech) during installation and setup
 - **OTA** firmware updates from the web page (MD5 verified, automatic rollback)
 - Persistent settings, IR LED independent of day/night, status LED control
