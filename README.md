@@ -1,4 +1,4 @@
-<p align="center"><a href="https://leotech.cz"><img src="docs/web/leotech_logo.svg" alt="leotech.cz" width="420"></a></p>
+<p align="center"><a href="https://leotech.cz"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/web/leotech_logo_dark.svg"><img src="docs/web/leotech_logo.svg" alt="leotech.cz" width="420"></picture></a></p>
 
 # LSC Smart Connect 3215672.3 – local firmware (ak_rtsp · leotech edition)
 
