@@ -6,10 +6,13 @@
 
 | ✅ Compatible camera / Kompatibilní kamera | |
 |---|---|
-| **Action – LSC Smart Connect indoor IP camera 1080p**<br>**Art. No. 3215672.3** (printed on the box)<br>Anyka AK3918AV130 · 2.4 GHz Wi-Fi (WPA/WPA2) | <img src="images/box/art_no_3215672_3.jpg" alt="Art. No. 3215672.3 on the Action box" width="300"> |
+| **Action – LSC Smart Connect indoor IP camera 1080p**<br>**Art. No. 3215672<u>.3</u>** – the **.3** is important (printed on the box)<br>Anyka AK3918AV130 · 2.4 GHz Wi-Fi (WPA/WPA2) | <img src="images/box/art_no_3215672_3.jpg" alt="Art. No. 3215672.3 on the Action box" width="300"> |
 
-> Check the **Art. No.** on the box before you start. Plain `3215672` (no suffix) is a different camera (Ingenic) and is **not** supported here.
-> Zkontroluj **Art. No.** na krabici. Samotné `3215672` (bez přípony) je jiná kamera (Ingenic) a **není** podporovaná.
+> ❗ **The `.3` at the end matters!** Check the **Art. No.** on the box before you start – it must be **3215672<u>.3</u>**.
+> The same item number without the suffix (`3215672`) is a completely different camera inside (Ingenic SoC) and is **not** supported here.
+>
+> ❗ **Tečka a trojka na konci jsou důležité!** Zkontroluj **Art. No.** na krabici – musí být **3215672<u>.3</u>**.
+> Stejné číslo bez přípony (`3215672`) je uvnitř úplně jiná kamera (čip Ingenic) a **není** podporovaná.
 
 > ⚠️ **USE AT YOUR OWN RISK.** Flashing custom firmware can permanently brick the camera, void the warranty and
 > violate the terms of the original app/cloud. Everything here is provided **"AS IS", without any warranty**, and
