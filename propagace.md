@@ -2,48 +2,34 @@
 
 ## 🇨🇿 Česky
 
-Ahoj 👋
+Ahoj 👋 kdyby někdo chtěl ultra levnou kameru se slušným 1080p, mám tip 📷
 
-Kdyby někdo chtěl **ultra levnou kameru** se slušným rozlišením (1080p), která se na hodně věcí hodí – mám tip.
+Kamera **LSC Smart Connect z Action** (Art. No. **3215672.3** – ta „.3“ je důležitá), cca **250 Kč**.
 
-Jde o kameru **LSC Smart Connect z Action** (vnitřní IP kamera, **Art. No. 3215672.3** – ta tečka trojka je důležitá), stojí cca **250 Kč**.
+Udělal jsem pro ni vlastní firmware: žádná aplikace LSC ani cloud Tuya, místo toho vlastní web s nastavením, **RTSP** rovnou do Frigate / go2rtc, **MQTT** s automatickým přidáním do **Home Assistantu**, Wi-Fi přes QR kód a kamera vám i řekne svou IP 🙂
 
-Udělal jsem pro ni vlastní firmware, se kterým se zbavíte aplikace LSC / cloudu Tuya a kamera má:
+Instalace jen přes **SD kartu** – připravíte ji na webu, strčíte do kamery a ta si sama zazálohuje originál a nahraje nový firmware. Celou dobu hlásí, co dělá. Zpátky na originál to jde stejně snadno.
 
-- **vlastní webovou stránku** (česky i anglicky) se všemi nastaveními
-- **RTSP stream** – rovnou do Frigate, go2rtc, VLC…
-- **MQTT** s automatickým přidáním do **Home Assistantu**
-- přehrávání zvuků, nastavení Wi-Fi přes QR kód z mobilu a kamera vám řekne svou IP adresu
+👉 https://leontech.github.io/lsc-camera-leotech/
 
-Instalace je jednoduchá: **stačí SD karta**. Na webu ji připravíte jedním tlačítkem, vložíte do kamery a ta si sama zazálohuje původní firmware, sestaví a nahraje nový. Celou dobu vám česky i anglicky hlásí, co dělá. Návrat na původní firmware jde stejně snadno.
+Zdarma a open source, jen na vlastní riziko 😉
 
-👉 **https://leontech.github.io/lsc-camera-leotech/**
-
-Je to open source a zdarma. Jen pozor: je to na vlastní riziko a s novým firmwarem už nefunguje aplikace LSC ani cloud Tuya (ale o to právě jde 😉).
-
-Když se bude hodit, budu rád za zpětnou vazbu. A kdo chce, může mi koupit kafe: https://ko-fi.com/leotechcz ☕
+#HomeAssistant #Frigate #RTSP #LSC #Action #smarthome #DIY
 
 ---
 
 ## 🇬🇧 English
 
-Hi 👋
+Hi 👋 if anyone wants an ultra cheap camera with decent 1080p, here's a tip 📷
 
-If anyone is looking for an **ultra cheap camera** with decent resolution (1080p) that is good for a lot of things – here's a tip.
+The **LSC Smart Connect camera from Action** (Art. No. **3215672.3** – the ".3" matters), about **€10**.
 
-It's the **LSC Smart Connect camera from Action** (indoor IP camera, **Art. No. 3215672.3** – the ".3" matters), about **€10**.
+I made a custom firmware for it: no LSC app, no Tuya cloud – instead its own settings web page, **RTSP** straight into Frigate / go2rtc, **MQTT** with automatic **Home Assistant** discovery, Wi-Fi setup by QR code, and the camera even tells you its IP 🙂
 
-I made a custom firmware for it: you get rid of the LSC app / Tuya cloud and the camera gets:
+Installing needs just an **SD card** – prepare it on the web page, put it in the camera, and the camera backs up the original and flashes the new firmware by itself, telling you out loud what it's doing. Going back to the original is just as easy.
 
-- **its own web page** with all settings
-- an **RTSP stream** – straight into Frigate, go2rtc, VLC…
-- **MQTT** with automatic **Home Assistant** discovery
-- sound playback, Wi-Fi setup by QR code from your phone, and the camera tells you its IP address
+👉 https://leontech.github.io/lsc-camera-leotech/
 
-Installing is easy: **all you need is an SD card**. Prepare it on the web page with one button and put it in the camera. The camera backs up its original firmware, then builds and flashes the new one by itself, and tells you out loud what it's doing. Going back to the original firmware is just as easy.
+Free and open source, at your own risk 😉
 
-👉 **https://leontech.github.io/lsc-camera-leotech/**
-
-It's open source and free. Just note: it's at your own risk, and with the new firmware the LSC app and Tuya cloud no longer work (which is kind of the point 😉).
-
-Feedback is welcome. And if you like it, you can buy me a coffee: https://ko-fi.com/leotechcz ☕
+#HomeAssistant #Frigate #RTSP #LSC #Action #smarthome #DIY
