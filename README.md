@@ -14,6 +14,14 @@
 > ❗ **Tečka a trojka na konci jsou důležité!** Zkontroluj **Art. No.** na krabici – musí být **3215672<u>.3</u>**.
 > Stejné číslo bez přípony (`3215672`) je uvnitř úplně jiná kamera (čip Ingenic) a **není** podporovaná.
 
+> 📵 **After installing, the original LSC Smart Connect app and the Tuya cloud no longer work with this camera**
+> (no app, no cloud recording, no notifications, the Tuya device licence/pairing is not used).
+> You can go back at any time – **[how to restore the original firmware](docs/RESTORE.md)**.
+>
+> 📵 **Po instalaci přestane s kamerou fungovat původní aplikace LSC Smart Connect i cloud Tuya**
+> (žádná aplikace, cloudové nahrávání ani notifikace, licence/párování Tuya se nepoužívá).
+> Kdykoli se dá vrátit – **[návod na návrat původního firmwaru](docs/RESTORE.md)**.
+
 > ⚠️ **USE AT YOUR OWN RISK.** Flashing custom firmware can permanently brick the camera, void the warranty and
 > violate the terms of the original app/cloud. Everything here is provided **"AS IS", without any warranty**, and
 > **the authors accept no responsibility or liability** for any damage, data loss or other consequences. Make your
@@ -56,6 +64,7 @@ version is refused and **nothing is written**.
 |---|---|
 | First install on a stock camera | microSD card (FAT32), see [docs/INSTALL.md](docs/INSTALL.md) |
 | Updates | the camera's web page (System → Firmware update) |
+| **Back to the original firmware** | [docs/RESTORE.md](docs/RESTORE.md) – web page or SD card, from your backup |
 | Building from source | Linux (or WSL), see [docs/BUILD.md](docs/BUILD.md) |
 
 **Why is there no ready-made firmware image to download?** The image is built from the camera's *own* original
@@ -95,6 +104,7 @@ Verze `.1`/`.2` mají stejný čip Anyka a pravděpodobně budou fungovat; kamer
 čip Ingenic) je **jiná** – pro ni je [Thingino](https://github.com/themactep/thingino-firmware/wiki/Camera:-LSC-3215672).
 Instalátor kontroluje rozložení flash a přesné MD5 původního firmwaru – neznámou kameru/verzi odmítne a **nic nezapíše**.
 
+- **Původní aplikace LSC Smart Connect a cloud Tuya po instalaci nefungují.** Návrat: [docs/RESTORE.md](docs/RESTORE.md)
 - **Instalace:** microSD karta (FAT32) – [docs/INSTALL.md](docs/INSTALL.md)
 - **Aktualizace:** webová stránka kamery (Systém → Aktualizace firmwaru)
 - **Sestavení ze zdrojáků:** Linux / WSL – [docs/BUILD.md](docs/BUILD.md)

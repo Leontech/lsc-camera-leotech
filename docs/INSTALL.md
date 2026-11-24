@@ -1,6 +1,9 @@
 # Installation / Instalace
 
 > ⚠️ At your own risk – no warranty, no liability. / Na vlastní riziko – bez záruky, bez odpovědnosti.
+>
+> 📵 After installing, the **original LSC Smart Connect app and Tuya cloud stop working** with the camera. Back to original: [RESTORE.md](RESTORE.md).
+> 📵 Po instalaci **přestane fungovat původní aplikace LSC Smart Connect i cloud Tuya**. Návrat: [RESTORE.md](RESTORE.md).
 
 ## Camera / Kamera
 Action **LSC Smart Connect** indoor IP camera 1080p, item **3215672**, label "No." **3215672.3** (Anyka AK3918AV130).

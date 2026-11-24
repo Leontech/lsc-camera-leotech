@@ -144,14 +144,15 @@ footer{color:var(--mut);font-size:12.5px;text-align:center;padding:26px 0 10px;d
  <div class="card"><h3 data-en="Firmware update">Aktualizace firmwaru</h3><div class="f">
   <input type="file" id="ofile" accept=".squashfs,.bin">
   <div class="bar"><i id="obar"></i></div><div class="hint" id="oinfo" data-en="File ak_rtsp_firmware_*.squashfs (5 MB). MD5 is verified and the previous firmware is restored on error. Do not power off.">Soubor ak_rtsp_firmware_*.squashfs (5 MB). Ověří se MD5, při chybě se vrátí původní firmware. Nevypínej kameru.</div>
-  <button class="btn" id="ogo" disabled data-en="Upload and update">Nahrát a aktualizovat</button></div></div>
+  <button class="btn" id="ogo" disabled data-en="Upload and update">Nahrát a aktualizovat</button>
+  <p class="hint" data-en="↩ Back to the original Tuya firmware: upload mtdblock7.bin from the backup made by the installer (leo/backup/&lt;MAC&gt;/ on the SD card). The LSC Smart Connect app then works again after a reset and re-pairing.">↩ Návrat na původní firmware Tuya: nahraj mtdblock7.bin ze zálohy, kterou udělal instalátor (leo/backup/&lt;MAC&gt;/ na SD kartě). Aplikace LSC Smart Connect pak po resetu a novém spárování zase funguje.</p></div></div>
  <div class="card"><h3 data-en="Reset button">Reset tlačítko</h3>
   <div class="row"><span data-en="hold 2 s (1 beep)">držet 2 s (1 pípnutí)</span><small data-en="Wi-Fi via QR code (again = cancel)">Wi-Fi přes QR kód (znovu = zrušit)</small></div>
   <div class="row"><span data-en="hold 5 s (2 beeps)">držet 5 s (2 pípnutí)</span><small data-en="clears the web password">smaže heslo webu</small></div>
   <div class="row"><span data-en="hold 15 s (ding-ding-ding)">držet 15 s (ding-ding-ding)</span><small data-en="image + MQTT + password, restart">obraz + MQTT + heslo, restart</small></div>
   <p class="hint" data-en="Wi-Fi is always kept.">Wi-Fi zůstává vždy zachovaná.</p></div>
  <div class="card"><h3>leotech.cz</h3>
-  <p class="hint" data-en="Custom ak_rtsp firmware for the LSC Smart Connect camera – local RTSP, no cloud.">Vlastní firmware ak_rtsp pro kameru LSC Smart Connect – lokální RTSP bez cloudu.</p>
+  <p class="hint" data-en="Custom ak_rtsp firmware for the LSC Smart Connect camera – local RTSP, no cloud. The original LSC Smart Connect app and Tuya cloud do not work with this firmware. Use at your own risk.">Vlastní firmware ak_rtsp pro kameru LSC Smart Connect – lokální RTSP bez cloudu. Původní aplikace LSC Smart Connect ani cloud Tuya s tímto firmwarem nefungují. Na vlastní riziko.</p>
   <div class="bt"><a class="btn sec" href="https://leotech.cz" target="_blank" rel="noopener">🌐 leotech.cz</a><a class="btn sec" href="https://ko-fi.com/leotechcz" target="_blank" rel="noopener" data-en="☕ Support on Ko-fi">☕ Podpořit na Ko-fi</a></div></div>
 </div></section>
 <footer><span>ak_rtsp custom firmware</span><a href="https://leotech.cz" target="_blank" rel="noopener">leotech.cz</a><a href="https://ko-fi.com/leotechcz" target="_blank" rel="noopener">☕ Ko-fi</a></footer>

@@ -5,6 +5,7 @@
 #   older ak_rtsp build (known MD5) -> backup of current APP, flash (upgrade)
 #   same image already installed    -> say so once, then stay silent
 #   anything else                   -> "unsupported", nothing is written
+#   leo/restore/mtdblock7.bin present -> RESTORE the original firmware from that backup
 # On flash failure the APP from before is written back.  (c) 2026 leotech.cz, MIT
 SD=/tmp/sd
 L="$SD/leo"
@@ -35,6 +36,42 @@ check_layout() {
 if ! check_layout; then
     echo "unsupported flash layout:"; cat /proc/mtd
     say sd_unsupported; exit 1
+fi
+
+# ---------------- RESTORE MODE: leo/restore/mtdblock7.bin = original firmware backup ----------------
+RS="$L/restore"
+if [ -f "$RS/mtdblock7.bin" ]; then
+    R="$RS/mtdblock7.bin"
+    echo "RESTORE requested: $R"
+    if [ "$(stat -c%s "$R")" != "5242880" ] || [ "$(dd if="$R" bs=4 count=1 2>/dev/null)" != "hsqs" ]; then
+        echo "restore image invalid (size/magic)"; say sd_unsupported; exit 1
+    fi
+    RMD5=$(md5sum "$R" | awk '{print $1}')
+    if [ -f "$RS/md5sums.txt" ] && ! grep -q "^$RMD5 .*mtdblock7.bin" "$RS/md5sums.txt"; then
+        echo "restore image does not match md5sums.txt - nothing written"; say sd_unsupported; exit 1
+    fi
+    CUR=$(md5sum /dev/mtdblock7 | awk '{print $1}')
+    if [ "$CUR" = "$RMD5" ]; then
+        echo "original firmware already installed"; mv "$RS" "$L/restore.done.$(date +%s)" 2>/dev/null; sync
+        say sd_restored; exit 0
+    fi
+    BK="$L/backup/$MAC"; mkdir -p "$BK"
+    dd if=/dev/mtdblock7 of="$BK/app_before_restore_$CUR.bin" bs=64k 2>/dev/null; sync
+    if [ -f "$L/flash_tool" ]; then cp "$L/flash_tool" /tmp/leo_flash_tool; else cp /usr/bin/flash_tool /tmp/leo_flash_tool; fi; chmod +x /tmp/leo_flash_tool
+    cp "$L/leo_say" /tmp/leo_say && chmod +x /tmp/leo_say
+    say sd_restore
+    sync
+    /tmp/leo_flash_tool "$R" /dev/mtd7 >/tmp/leo_flash.log 2>&1
+    RC=$?; cat /tmp/leo_flash.log
+    if [ "$RC" -eq 0 ]; then
+        mv "$RS" "$L/restore.done.$(date +%s)" 2>/dev/null; sync
+        echo "ORIGINAL FIRMWARE RESTORED -> reboot"
+        /tmp/leo_say "$L/voice/sd_restored.adp"; sync; sleep 2; reboot; exit 0
+    fi
+    echo "restore flash failed ($RC) - writing back previous APP"
+    /tmp/leo_flash_tool "$BK/app_before_restore_$CUR.bin" /dev/mtd7 >/tmp/leo_flash.log 2>&1
+    if [ $? -eq 0 ]; then /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; reboot; exit 2; fi
+    /tmp/leo_say "$L/voice/sd_fatal.adp"; exit 3
 fi
 
 IMG=""
