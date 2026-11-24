@@ -4,6 +4,8 @@
 #   stock APP (known MD5)          -> full backup of all MTD partitions to the card, flash
 #   older ak_rtsp build (known MD5) -> backup of current APP, flash (upgrade)
 #   same image already installed    -> say so once, then stay silent
+#   no prebuilt image on the card   -> the firmware is BUILT ON THE CAMERA from its own original
+#                                      firmware (leo_build_fw.sh + leo/payload), then flashed
 #   anything else                   -> "unsupported", nothing is written
 #   leo/restore/mtdblock7.bin present -> RESTORE the original firmware from that backup
 # On flash failure the APP from before is written back.  (c) 2026 leotech.cz, MIT
@@ -76,39 +78,67 @@ fi
 
 IMG=""
 for f in "$L"/firmware/ak_rtsp_firmware_*.squashfs; do [ -f "$f" ] && IMG="$f"; done
-if [ -z "$IMG" ] || [ "$(stat -c%s "$IMG")" != "5242880" ]; then
-    echo "no valid firmware image in $L/firmware"; say sd_unsupported; exit 1
-fi
-NEW=$(md5sum "$IMG" | awk '{print $1}')
 CUR=$(md5sum /dev/mtdblock7 | awk '{print $1}')
-echo "image $IMG md5 $NEW"
 echo "current APP md5 $CUR"
-
-if [ "$CUR" = "$NEW" ]; then
-    if [ -f "$L/state/$MAC.$NEW" ]; then echo "already installed (announced before) - silent"; exit 0; fi
-    touch "$L/state/$MAC.$NEW"; sync
-    echo "already installed"; say sd_already; exit 0
-fi
-
-say sd_hello
-KIND=""
-grep -qi "^$CUR" "$L/stock_md5.txt" 2>/dev/null && KIND=stock
-grep -qi "^$CUR" "$L/custom_md5.txt" 2>/dev/null && KIND=custom
-if [ -z "$KIND" ]; then
-    echo "current APP is neither a known stock nor a known ak_rtsp build - nothing written"
-    say sd_unsupported; exit 1
-fi
-echo "current APP: $KIND"
-
 BK="$L/backup/$MAC"
 mkdir -p "$BK"
-if [ ! -f "$BK/md5sums.txt" ]; then
-    say sd_backup
-    for i in 0 1 2 3 4 5 6 7; do dd if=/dev/mtdblock$i of="$BK/mtdblock$i.bin" bs=64k 2>/dev/null; done
-    (cd "$BK" && md5sum mtdblock*.bin > md5sums.txt)
-    sync
-    echo "full backup ($KIND) saved to $BK"
+
+if [ -n "$IMG" ]; then
+    # ---------- prebuilt image on the card (private kit) ----------
+    if [ "$(stat -c%s "$IMG")" != "5242880" ]; then echo "prebuilt image has wrong size"; say sd_unsupported; exit 1; fi
+    NEW=$(md5sum "$IMG" | awk '{print $1}')
+    echo "prebuilt image $IMG md5 $NEW"
+    if [ "$CUR" = "$NEW" ]; then
+        if [ -f "$L/state/$MAC.$NEW" ]; then echo "already installed (announced before) - silent"; exit 0; fi
+        touch "$L/state/$MAC.$NEW"; sync; echo "already installed"; say sd_already; exit 0
+    fi
+    say sd_hello
+    KIND=""
+    grep -qi "^$CUR" "$L/stock_md5.txt" 2>/dev/null && KIND=stock
+    grep -qi "^$CUR" "$L/custom_md5.txt" 2>/dev/null && KIND=custom
+    [ -n "$KIND" ] || { echo "current APP unknown - nothing written"; say sd_unsupported; exit 1; }
+    if [ ! -f "$BK/md5sums.txt" ]; then
+        say sd_backup
+        for i in 0 1 2 3 4 5 6 7; do dd if=/dev/mtdblock$i of="$BK/mtdblock$i.bin" bs=64k 2>/dev/null; done
+        (cd "$BK" && md5sum mtdblock*.bin > md5sums.txt); sync
+    fi
+else
+    # ---------- build the image on the camera from its own original firmware ----------
+    [ -f "$L/payload/ak_rtsp" ] && [ -f "$L/leo_build_fw.sh" ] || { echo "no firmware image and no payload"; say sd_unsupported; exit 1; }
+    PAY=$(md5sum "$L/payload/ak_rtsp" | awk '{print $1}')
+    if [ -f "$L/state/$MAC.built" ] && [ "$(cat "$L/state/$MAC.built")" = "$CUR $PAY" ]; then
+        echo "this build is already installed - silent"; exit 0
+    fi
+    say sd_hello
+    STOCKSRC=""
+    if grep -qi "^$CUR" "$L/stock_md5.txt" 2>/dev/null; then
+        # original firmware running: full backup first (also the build source)
+        if [ ! -f "$BK/md5sums.txt" ] || ! grep -q "^$CUR .*mtdblock7.bin" "$BK/md5sums.txt"; then
+            say sd_backup
+            for i in 0 1 2 3 4 5 6 7; do dd if=/dev/mtdblock$i of="$BK/mtdblock$i.bin" bs=64k 2>/dev/null; done
+            (cd "$BK" && md5sum mtdblock*.bin > md5sums.txt); sync
+        fi
+        STOCKSRC="$BK/mtdblock7.bin"
+    elif [ -f "$BK/mtdblock7.bin" ] && grep -qi "^$(md5sum "$BK/mtdblock7.bin" | awk '{print $1}')" "$L/stock_md5.txt"; then
+        # already custom firmware, original backup of THIS camera is on the card -> rebuild (update)
+        STOCKSRC="$BK/mtdblock7.bin"
+    fi
+    if [ -z "$STOCKSRC" ]; then echo "no original firmware backup for this camera - nothing written"; say sd_unsupported; exit 1; fi
+    [ "$(md5sum "$STOCKSRC" | awk '{print $1}')" = "$(grep 'mtdblock7.bin' "$BK/md5sums.txt" | awk '{print $1}')" ] || { echo "backup does not verify"; say sd_unsupported; exit 1; }
+    mkdir -p "$L/build"
+    IMG="$L/build/ak_rtsp_firmware_built.squashfs"
+    say sd_building
+    L="$L" sh "$L/leo_build_fw.sh" "$STOCKSRC" "$IMG"
+    BRC=$?
+    if [ "$BRC" -ne 0 ]; then
+        echo "build failed ($BRC) - nothing written"
+        if [ "$BRC" -eq 4 ]; then say sd_nomem; else say sd_buildfail; fi
+        exit 1
+    fi
+    NEW=$(md5sum "$IMG" | awk '{print $1}')
+    KIND=built
 fi
+echo "flashing ($KIND) $IMG md5 $NEW"
 PREV="$BK/app_before_$CUR.bin"
 if [ ! -f "$PREV" ]; then dd if=/dev/mtdblock7 of="$PREV" bs=64k 2>/dev/null; sync; fi
 if [ "$(md5sum "$PREV" | awk '{print $1}')" != "$CUR" ]; then
@@ -124,7 +154,9 @@ sync
 RC=$?
 cat /tmp/leo_flash.log
 if [ "$RC" -eq 0 ]; then
-    touch "$L/state/$MAC.$NEW"; sync
+    touch "$L/state/$MAC.$NEW"
+    [ "$KIND" = "built" ] && echo "$NEW $PAY" > "$L/state/$MAC.built"
+    sync
     echo "FLASH OK -> reboot"
     /tmp/leo_say "$L/voice/sd_done.adp"
     sync; sleep 2; reboot; exit 0

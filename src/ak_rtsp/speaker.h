@@ -32,3 +32,4 @@ int speaker_builtin_hidden(const char *name);
 int speaker_hide_builtin(const char *name);   /* "delete" built-in */
 int speaker_restore_builtins(void);
 int speaker_play_sys(const char *name);       /* system voice prompt */
+void speaker_say_ip(int interrupt);            /* LEO build24: IP address EN + CZ */

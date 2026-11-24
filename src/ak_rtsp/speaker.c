@@ -14,7 +14,7 @@
 #include <netinet/in.h>
 #include "speaker.h"
 
-#define SPK_RING_SAMPLES (8000 * 20)   /* 20 s buffer */
+#define SPK_RING_SAMPLES (8000 * 30)   /* 30 s buffer */
 #define SPK_AMP_GPIO     69
 #define SPK_AMP_OFF_MS   800
 
@@ -134,6 +134,34 @@ int speaker_play_sys(const char *name)
         if (speaker_enqueue(buf, (size_t)r / 2, 0, gen) < (size_t)r / 2) break;
     close(fd);
     return 0;
+}
+
+/* LEO build24: speak the camera's IP address, English then Czech */
+const char *net_ip_string(void);
+static void spk_gap(int ms)
+{
+    static const int16_t z[400] = { 0 };
+    int n = 8 * ms;
+    while (n > 0) { int c = n > 400 ? 400 : n; speaker_enqueue(z, (size_t)c, 0, g_generation); n -= c; }
+}
+static void say_ip_lang(const char *ip, const char *lang)
+{
+    char nm[24];
+    snprintf(nm, sizeof nm, "ip_%s_intro", lang); speaker_play_sys(nm); spk_gap(180);
+    for (const char *c = ip; *c; c++) {
+        if (*c >= '0' && *c <= '9') snprintf(nm, sizeof nm, "ip_%s_%c", lang, *c);
+        else if (*c == '.') snprintf(nm, sizeof nm, "ip_%s_dot", lang);
+        else continue;
+        speaker_play_sys(nm); spk_gap(70);
+    }
+}
+void speaker_say_ip(int interrupt)
+{
+    const char *ip = net_ip_string();
+    if (interrupt) speaker_stop();
+    if (!ip || !ip[0] || ip[0] == '?' || !strncmp(ip, "0.", 2)) { speaker_play_sys("ip_none"); return; }
+    printf("[speaker] saying IP %s\n", ip);
+    say_ip_lang(ip, "en"); spk_gap(450); say_ip_lang(ip, "cz");
 }
 
 int speaker_play(const char *name)

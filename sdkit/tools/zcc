@@ -1,0 +1,3 @@
+#!/bin/sh
+for a in "$@"; do case "$a" in -c|-E|-S|-M|-MM) exec zig cc -target arm-linux-musleabi -mcpu=arm926ej_s -mfloat-abi=soft -fno-sanitize=all "$@";; esac; done
+exec zig cc -target arm-linux-musleabi -mcpu=arm926ej_s -mfloat-abi=soft -fno-sanitize=all "$@" /home/leos/lscfw/sqtools/armv5_sync.o

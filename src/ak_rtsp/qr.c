@@ -259,6 +259,7 @@ static void *qr_thread(void *arg)
             printf("[qr] Wi-Fi %s\n", ok ? "connected" : "FAILED - previous network restored");
             snprintf(g_qr_status, sizeof g_qr_status, ok ? "připojeno k %s" : "nezdařilo se (%s), původní síť obnovena", wf.ssid);
             speaker_stop(); speaker_play_sys(ok ? "wifi_ok" : "wifi_fail");
+            if (ok) { sleep(3); speaker_say_ip(0); }   /* LEO build24: announce the new IP */
             done = 1;
         }
         usleep(150000);

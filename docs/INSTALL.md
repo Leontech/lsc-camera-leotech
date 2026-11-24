@@ -22,7 +22,7 @@ The upstream wizard [4ddict/Action-Smart-Connect-Flasher](https://github.com/4dd
 Camera web page → System → Firmware update (MD5 check, automatic rollback).
 
 ## Reset button
-2 s = Wi-Fi via QR · 5 s = clear web password · 15 s = defaults (image, MQTT, password) + restart. Wi-Fi is never erased.
+short press = says the IP address (English + Czech) · 2 s = Wi-Fi via QR · 5 s = clear web password · 15 s = defaults (image, MQTT, password) + restart. Wi-Fi is never erased.
 
 ---
 **CZ:** Postup A – sestav obraz ze zálohy své kamery ([BUILD.md](BUILD.md)), kartu naformátuj na FAT32, na stránce **https://leontech.github.io/lsc-camera-leotech/** ji připrav, vlož do vypnuté kamery a zapni. Kamera nejdřív zálohuje originál na kartu (`leo/backup/<MAC>`), pak zapíše nový firmware a restartuje se. Neznámou kameru/verzi odmítne. Zálohu si ulož! Wi-Fi nastavíš QR kódem (reset 2 s).

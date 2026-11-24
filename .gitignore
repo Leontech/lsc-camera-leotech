@@ -9,3 +9,5 @@ src/smolrtsp/
 *.squashfs
 *.bin
 src/ak_rtsp/leo_sounds/
+src/ak_rtsp/version_info.h
+sdkit/tools/work/

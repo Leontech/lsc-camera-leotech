@@ -2,6 +2,7 @@
  *   hold >= 5 s  (beep while holding)        -> clear web password      (2 beeps)
  *   hold >= 15 s (ding_ding_ding while hold) -> settings + MQTT + web password
  *                                              reset, reboot            (3 beeps)
+ *   short press (< 2 s)                     -> say the IP address (EN + CZ)
  *   Wi-Fi configuration is never touched.
  *   hold 2-5 s (1 beep)                     -> Wi-Fi setup by QR code (again = cancel)                          */
 #include <stdio.h>
@@ -70,6 +71,8 @@ static void *button_loop(void *arg)
                         web_reset_password(); speaker_stop(); speaker_play_sys("pass_reset");
                     } else if (held >= 2000) {
                         if (qr_running()) qr_cancel(); else qr_wifi_start(120);
+                    } else if (held >= 50 && !qr_running()) {
+                        speaker_say_ip(1);        /* short press: say the IP address */
                     }
                 }
             }

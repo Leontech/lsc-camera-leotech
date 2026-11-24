@@ -53,7 +53,8 @@ version is refused and **nothing is written**.
 - **Speaker** – built-in and user sounds, play from HA (`mqtt.publish … /play`), live stream to TCP 8093
 - **Wi-Fi by QR code** – hold the reset button 2 s and show the phone's "share Wi-Fi" QR code; falls back to the
   previous network if the new one does not connect
-- **Reset button** – 2 s QR Wi-Fi · 5 s clear web password · 15 s defaults (Wi-Fi is never erased)
+- **Reset button** – short press: the camera **says its IP address** (EN + CZ) · 2 s QR Wi-Fi · 5 s clear web password · 15 s defaults (Wi-Fi is never erased)
+- After a successful Wi-Fi setup by QR code the camera also announces its new IP address
 - **Voice prompts** (English + Czech) during installation and setup
 - **OTA** firmware updates from the web page (MD5 verified, automatic rollback)
 - Persistent settings, IR LED independent of day/night, status LED control
