@@ -63,11 +63,32 @@ footer{color:var(--mut);font-size:12.5px;text-align:center;padding:20px}
 <li data-cs="Nová kamera: zálohuje původní firmware na kartu (leo/backup/&amp;lt;MAC&amp;gt;), <b>sestaví nový firmware</b> (několik minut), zapíše ho (~30 s) a restartuje se. Kameru během toho neodpojuj.">New camera: it backs up the original firmware to the card (leo/backup/&lt;MAC&gt;), <b>builds the new firmware</b> (a few minutes), writes it (~30 s) and restarts. Do not unplug the camera meanwhile.</li>
 <li data-cs="Neznámá kamera nebo verze: kamera to řekne a nic se nezapíše.">Unknown camera or version: the camera says so and nothing is written.</li>
 <li data-cs="Kartu vyndej a zálohu z leo/backup si ulož do PC!">Remove the card and keep the backup from leo/backup on your PC!</li>
-<li data-cs="Wi-Fi: podrž reset tlačítko 2 s (pípne) a ukaž kameře QR kód Wi-Fi z mobilu (Nastavení Wi-Fi → Sdílet). <b>Po úspěšném připojení kamera řekne svou IP adresu</b> (anglicky i česky).">Wi-Fi: hold the reset button for 2 s (beep) and show the camera your phone's Wi-Fi QR code (Wi-Fi settings → Share). <b>After connecting, the camera says its IP address</b> (English and Czech).</li>
-<li data-cs="<b>Krátký stisk reset tlačítka</b> = kamera kdykoli řekne svou IP adresu.">A <b>short press of the reset button</b> = the camera says its IP address at any time.</li>
-<li data-cs="Web kamery: http://&amp;lt;IP kamery&amp;gt;/ – nastavení, MQTT / Home Assistant, zvuky, heslo, aktualizace.">Camera web page: http://&lt;camera IP&gt;/ – settings, MQTT / Home Assistant, sounds, password, updates.</li>
-<li data-cs="Tlačítko: 5 s = smaže heslo webu, 15 s = tovární nastavení (kamera vždy řekne, co udělala).">Button: 5 s = clears the web password, 15 s = factory settings (the camera always says what it did).</li></ol>
+<li data-cs="Pak kameru připoj k Wi-Fi a ovládej ji – viz <a href='#ovladani'>6 · Ovládání</a> níže.">Then connect the camera to Wi-Fi and control it – see <a href='#ovladani'>6 · Operation</a> below.</li></ol>
 <p class="hint" data-cs="Log instalace: logs/leo_autoflash.log na kartě.">Installer log: logs/leo_autoflash.log on the card.</p></div>
+<div class="card" id="ovladani"><h2 data-cs="6 · Ovládání">6 · Operation</h2>
+<h3 data-cs="Reset tlačítko" style="font-size:14.5px;margin:6px 0">Reset button</h3>
+<table>
+<tr><td><b data-cs="krátký stisk">short press</b></td><td data-cs="kamera řekne svou <b>IP adresu</b> (anglicky, pak česky); bez sítě řekne, že není připojená">the camera says its <b>IP address</b> (English, then Czech); without network it says it is not connected</td></tr>
+<tr><td><b data-cs="držet 2 s">hold 2 s</b> <span class="hint" data-cs="(1 pípnutí)">(1 beep)</span></td><td data-cs="<b>Wi-Fi přes QR kód</b>: ukaž kameře na 10–30 cm QR kód Wi-Fi z mobilu (Android: Wi-Fi → síť → Sdílet; iPhone: aplikace „QR kód Wi-Fi“). Modrá LED bliká, kamera hlásí průběh a <b>po připojení řekne novou IP adresu</b>. Když se nepřipojí, vrátí původní síť. Další podržení 2 s = zrušit.">
+<b>Wi-Fi by QR code</b>: show the camera your phone's Wi-Fi QR code from 10–30 cm (Android: Wi-Fi → network → Share; iPhone: a "Wi-Fi QR code" app). The blue LED blinks, the camera announces the progress and <b>says its new IP address after connecting</b>. If it cannot connect, it returns to the previous network. Hold 2 s again = cancel.</td></tr>
+<tr><td><b data-cs="držet 5 s">hold 5 s</b> <span class="hint" data-cs="(2 pípnutí)">(2 beeps)</span></td><td data-cs="smaže heslo webu kamery (zapomenuté heslo)">clears the camera web password (forgotten password)</td></tr>
+<tr><td><b data-cs="držet 15 s">hold 15 s</b> <span class="hint">(ding-ding-ding)</span></td><td data-cs="tovární nastavení: obraz, MQTT a heslo webu se vrátí na výchozí a kamera se restartuje. <b>Wi-Fi zůstává.</b>">factory settings: image, MQTT and web password back to defaults, the camera restarts. <b>Wi-Fi is kept.</b></td></tr>
+</table>
+<p class="hint" data-cs="Kamera vždy nahlas řekne, co udělala (anglicky, pak česky).">The camera always says out loud what it did (English, then Czech).</p>
+<h3 data-cs="Web kamery" style="font-size:14.5px;margin:14px 0 6px">Camera web page</h3>
+<p data-cs="V prohlížeči otevři <code>http://&amp;lt;IP kamery&amp;gt;/</code> (IP řekne kamera po krátkém stisku tlačítka). Stránka je česky nebo anglicky podle prohlížeče.">Open <code>http://&lt;camera IP&gt;/</code> in a browser (the camera says the IP after a short button press). The page is Czech or English according to the browser.</p>
+<ul>
+<li data-cs="<b>První otevření</b>: zvol heslo (min. 6 znaků), nebo nech prázdné a web poběží bez hesla. Heslo jde zapnout později v záložce Systém.">
+<b>First visit</b>: choose a password (min. 6 characters), or leave it empty and the page runs without one. You can turn the password on later in the System tab.</li>
+<li data-cs="<b>Obraz</b>: režim den/noc (auto/den/noc), IR přísvit (auto/zap/vyp), stavová LED, otočení a zrcadlení, jas, kontrast, sytost, ostrost, náhled snímku a adresa RTSP streamu <code>rtsp://&amp;lt;IP&amp;gt;:554/main_ch</code> (Frigate, VLC).">
+<b>Image</b>: day/night mode (auto/day/night), IR light (auto/on/off), status LED, flip and mirror, brightness, contrast, saturation, sharpness, snapshot preview and the RTSP stream address <code>rtsp://&lt;IP&gt;:554/main_ch</code> (Frigate, VLC).</li>
+<li data-cs="<b>Zvuk</b>: hlasitost, přehrání a mazání zvuků v kameře, nahrání vlastního zvuku (MP3/WAV – převede se v prohlížeči), živý zvuk z mikrofonu nebo vlastní stream na TCP port 8093.">
+<b>Sound</b>: volume, play and delete the sounds in the camera, upload your own sound (MP3/WAV – converted in the browser), live sound from the microphone or your own stream to TCP port 8093.</li>
+<li data-cs="<b>MQTT / Home Assistant</b>: zadej broker (adresa, port, jméno, heslo). Kamera se v Home Assistantu objeví sama (MQTT discovery) se všemi přepínači, posuvníky a tlačítkem pro každý zvuk.">
+<b>MQTT / Home Assistant</b>: enter the broker (address, port, user, password). The camera appears in Home Assistant automatically (MQTT discovery) with all switches, sliders and a button for every sound.</li>
+<li data-cs="<b>Systém</b>: název kamery (i pro Home Assistant), heslo webu, Wi-Fi přes QR kód, aktualizace firmwaru (soubor .squashfs, nebo <code>mtdblock7.bin</code> ze zálohy pro návrat na originál), restart a výchozí nastavení.">
+<b>System</b>: camera name (also for Home Assistant), web password, Wi-Fi by QR code, firmware update (a .squashfs file, or <code>mtdblock7.bin</code> from the backup to go back to the original), restart and default settings.</li>
+</ul></div>
 </main>
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(2,8,16,.72);z-index:9;align-items:center;justify-content:center"><div class="card warn" style="max-width:440px;margin:20px">
 <h2 data-cs="⚠️ Nejdřív souhlas">⚠️ Agreement first</h2><p data-cs="Před zápisem musíš nahoře zaškrtnout <b>„Rozumím a souhlasím – postupuji na vlastní riziko.“</b>">Before writing you must tick <b>"I understand and agree – I proceed at my own risk."</b> at the top.</p>
