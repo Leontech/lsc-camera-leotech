@@ -4,6 +4,13 @@
 
 **English** · [Česky](#česky)
 
+| ✅ Compatible camera / Kompatibilní kamera | |
+|---|---|
+| **Action – LSC Smart Connect indoor IP camera 1080p**<br>**Art. No. 3215672.3** (printed on the box)<br>Anyka AK3918AV130 · 2.4 GHz Wi-Fi (WPA/WPA2) | <img src="images/box/art_no_3215672_3.jpg" alt="Art. No. 3215672.3 on the Action box" width="300"> |
+
+> Check the **Art. No.** on the box before you start. Plain `3215672` (no suffix) is a different camera (Ingenic) and is **not** supported here.
+> Zkontroluj **Art. No.** na krabici. Samotné `3215672` (bez přípony) je jiná kamera (Ingenic) a **není** podporovaná.
+
 > ⚠️ **USE AT YOUR OWN RISK.** Flashing custom firmware can permanently brick the camera, void the warranty and
 > violate the terms of the original app/cloud. Everything here is provided **"AS IS", without any warranty**, and
 > **the authors accept no responsibility or liability** for any damage, data loss or other consequences. Make your
@@ -18,7 +25,7 @@ Wi-Fi setup by QR code and over-the-air updates.
 | | |
 |---|---|
 | Product | **LSC Smart Connect – Inteligentní vnitřní IP kamera 1080p** (Action, item **3215672**) |
-| **Required version** | the "No." on the box/label must be **3215672.3** (tested). `.1` / `.2` use the same Anyka SoC and will probably work; the plain **3215672** (no suffix, Ingenic T23) is a **different camera** – use [Thingino](https://github.com/themactep/thingino-firmware/wiki/Camera:-LSC-3215672) for it |
+| **Required version** | "Art. No." on the box must be **3215672.3** (tested). `.1` / `.2` use the same Anyka SoC and will probably work; the plain **3215672** (no suffix, Ingenic T23) is a **different camera** – use [Thingino](https://github.com/themactep/thingino-firmware/wiki/Camera:-LSC-3215672) for it |
 | SoC | Anyka **AK3918AV130**, 64 MB RAM, 8 MB SPI NOR flash |
 | Shop | e.g. [action.com – 3215672](https://www.action.com/pl-pl/p/3215672/inteligentna-wewnetrzna-kamera-ip-lsc-smart-connect/) (sold in Action stores across the EU, 2026) |
 
@@ -80,7 +87,7 @@ Firmware bez cloudu pro levnou **vnitřní IP kameru LSC Smart Connect z Action*
 jen v lokální síti: RTSP pro Frigate/VLC, webová stránka, MQTT s automatickým přidáním do Home Assistant,
 reproduktor, nastavení Wi-Fi QR kódem a aktualizace po síti.
 
-**Kamera:** LSC Smart Connect vnitřní IP kamera 1080p z Action, číslo **3215672.3** (na krabici/štítku „No.“).
+**Kamera:** LSC Smart Connect vnitřní IP kamera 1080p z Action, **Art. No. 3215672.3** (na krabici, viz fotka nahoře).
 Verze `.1`/`.2` mají stejný čip Anyka a pravděpodobně budou fungovat; kamera s číslem jen **3215672** (bez přípony,
 čip Ingenic) je **jiná** – pro ni je [Thingino](https://github.com/themactep/thingino-firmware/wiki/Camera:-LSC-3215672).
 Instalátor kontroluje rozložení flash a přesné MD5 původního firmwaru – neznámou kameru/verzi odmítne a **nic nezapíše**.
