@@ -6,7 +6,7 @@
 
 | ✅ Compatible camera / Kompatibilní kamera | |
 |---|---|
-| **Action – LSC Smart Connect indoor IP camera 1080p**<br>**Art. No. 3215672<u>.3</u>** – the **.3** is important (printed on the box)<br>Anyka AK3918AV130 · 2.4 GHz Wi-Fi (WPA/WPA2) | <img src="images/box/art_no_3215672_3.jpg" alt="Art. No. 3215672.3 on the Action box" width="300"> |
+| **Action – LSC Smart Connect indoor IP camera 1080p**<br>**Art. No. 3215672<u>.3</u>** – the **.3** is important (printed on the box)<br>Anyka AK3918AV130 · 2.4 GHz Wi-Fi (WPA/WPA2) | <img src="images/box/art_no_3215672_3.jpg" alt="Art. No. 3215672.3 on the box" width="330"> |
 
 > ❗ **The `.3` at the end matters!** Check the **Art. No.** on the box before you start – it must be **3215672<u>.3</u>**.
 > The same item number without the suffix (`3215672`) is a completely different camera inside (Ingenic SoC) and is **not** supported here.
