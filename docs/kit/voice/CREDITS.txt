@@ -1,0 +1,10 @@
+Voice prompts (all *.adp in kit/voice and kit/payload/leo_sounds/sys) were synthesized
+with Piper TTS (https://github.com/rhasspy/piper) - generator: sdkit/voice/make_voice.sh
+
+English voice: en_GB-cori-high - dataset from LibriVox recordings (public domain),
+               model by Bryce Beattie, https://huggingface.co/rhasspy/piper-voices
+Czech voice:   cs_CZ-kasandra-medium - dataset and voice (c) Ondřej Šimek,
+               licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/),
+               https://huggingface.co/ondrazarici/Cassandra-Kasandra-piper-cz
+
+The generated prompt files are distributed under CC BY 4.0 with the attribution above.

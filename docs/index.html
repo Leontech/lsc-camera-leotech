@@ -38,34 +38,40 @@ footer{color:var(--mut);font-size:12.5px;text-align:center;padding:20px}
 
 <div class="card"><h2 data-cs="3 · Firmware a hlasy">3 · Firmware and voices</h2>
 <p data-cs="✅ <b>Firmware si kamera sestaví sama</b> ze zálohy svého originálního firmwaru – nic dalšího nepotřebuješ. Na kartu se zapíšou jen naše otevřené programy.">✅ <b>The camera builds the firmware itself</b> from the backup of its own original firmware – you need nothing else. Only our open-source programs are written to the card.</p>
-<p class="hint"><span data-cs="Volitelně hlasové hlášky (*.adp – vygeneruješ skriptem sdkit/voice/make_voice.sh) a vlastní zvuky (*.s16, 8 kHz mono):">Optional voice prompts (*.adp – generate with sdkit/voice/make_voice.sh) and own sounds (*.s16, 8 kHz mono):</span><br><input type="file" id="voice" accept=".adp,.s16" multiple> <span id="vinfo" class="hint"></span></p>
-<details><summary class="hint" data-cs="Pokročilé: použít vlastní hotový obraz (.squashfs)">Advanced: use your own prebuilt image (.squashfs)</summary>
-<p><input type="file" id="img" accept=".squashfs"> <span id="imginfo" class="hint"></span></p></details></div>
+<p data-cs="🔊 <b>Hlasové hlášky jsou součástí</b> (anglicky, pak česky, ženský hlas). Kamera během celé instalace mluví a říká, co právě dělá – nemusíš nic sledovat na počítači.">🔊 <b>Voice prompts are included</b> (English, then Czech, female voice). The camera talks during the whole installation and says what it is doing – you do not need to watch anything on the computer.</p>
+<details><summary class="hint" data-cs="Pokročilé">Advanced</summary>
+<p class="hint"><span data-cs="Vlastní hlasy a zvuky (*.adp ze sdkit/voice/make_voice.sh, *.s16 8 kHz mono) – nahradí vestavěné se stejným jménem:">Own voices and sounds (*.adp from sdkit/voice/make_voice.sh, *.s16 8 kHz mono) – replace the built-in ones with the same name:</span><br><input type="file" id="voice" accept=".adp,.s16" multiple> <span id="vinfo" class="hint"></span></p>
+<p class="hint"><span data-cs="Vlastní hotový obraz firmwaru (.squashfs) místo sestavení v kameře:">Own prebuilt firmware image (.squashfs) instead of building in the camera:</span><br><input type="file" id="img" accept=".squashfs"> <span id="imginfo" class="hint"></span></p></details></div>
 
 <div class="card"><h2 data-cs="4 · Zapsat na kartu">4 · Write the card</h2>
-<button class="btn" id="go" disabled data-cs="Vybrat kartu a zapsat">Choose card and write</button>
-<p class="hint" data-cs="Vyber kořen karty (např. E:\). Stránka stáhne SD skripty toolkitu přímo z GitHubu (tasarren/lsc-tuya-toolkit), přidá instalátor leotech a tvůj firmware.">Select the root of the card (e.g. E:\). The page downloads the toolkit SD scripts directly from GitHub (tasarren/lsc-tuya-toolkit) and adds the leotech installer and your firmware.</p>
+<button class="btn" id="go" data-cs="Vybrat kartu a zapsat">Choose card and write</button>
+<p class="hint" data-cs="Vyber kořen karty (např. E:\). Stránka stáhne SD skripty toolkitu přímo z GitHubu (tasarren/lsc-tuya-toolkit), přidá instalátor leotech, hlasové hlášky a (volitelně) tvůj firmware.">Select the root of the card (e.g. E:\). The page downloads the toolkit SD scripts directly from GitHub (tasarren/lsc-tuya-toolkit) and adds the leotech installer, the voice prompts and (optionally) your firmware.</p>
+<p class="hint" data-cs="Počítač kartu nevidí? Pokud používáš virtuální stroj (VirtualBox apod.), vypni v něm USB filtr čtečky karet, jinak si ji VM vezme.">The computer does not see the card? If you use a virtual machine (VirtualBox etc.), disable its USB filter for the card reader, otherwise the VM grabs it.</p>
 <div id="log"></div></div>
 
 <div class="card" id="restore"><h2 data-cs="↩ Návrat na původní firmware">↩ Restore the original firmware</h2>
-<p data-cs="Instalátor ukládá zálohu originálu na kartu do <code>leo/backup/&lt;MAC&gt;/</code>. Vrátit ji jde dvěma způsoby:">The installer saves a backup of the original firmware to the card in <code>leo/backup/&lt;MAC&gt;/</code>. Two ways back:</p>
+<p data-cs="Instalátor ukládá zálohu originálu na kartu do <code>leo/backup/&amp;lt;MAC&amp;gt;/</code>. Vrátit ji jde dvěma způsoby:">The installer saves a backup of the original firmware to the card in <code>leo/backup/&lt;MAC&gt;/</code>. Two ways back:</p>
 <ol><li data-cs="<b>Web kamery</b> → Systém → Aktualizace firmwaru → vyber <code>mtdblock7.bin</code> ze zálohy.">Camera <b>web page</b> → System → Firmware update → choose <code>mtdblock7.bin</code> from the backup.</li>
 <li data-cs="<b>SD karta</b> – vyber soubory ze zálohy a stiskni tlačítko; kartu vlož do vypnuté kamery a zapni ji.">SD <b>card</b> – choose the backup files and press the button; insert the card into the powered-off camera and switch it on.</li></ol>
 <p><span class="hint" data-cs="Soubory zálohy: mtdblock7.bin a md5sums.txt">Backup files: mtdblock7.bin and md5sums.txt</span><br><input type="file" id="rfiles" multiple accept=".bin,.txt"> <span id="rinfo" class="hint"></span></p>
-<button class="btn" id="rgo" disabled data-cs="Vybrat kartu a zapsat obnovu">Choose card and write restore</button>
+<button class="btn" id="rgo" data-cs="Vybrat kartu a zapsat obnovu">Choose card and write restore</button>
 <p class="hint" data-cs="Podrobně: docs/RESTORE.md. Pro aplikaci LSC Smart Connect pak kameru resetuj původním způsobem a přidej ji znovu.">Details: docs/RESTORE.md. To use the LSC Smart Connect app afterwards, reset the camera the original way and add it again.</p>
 <div id="rlog" style="font:12.5px ui-monospace,Consolas,monospace;white-space:pre-wrap"></div></div>
 
 <div class="card"><h2 data-cs="5 · V kameře">5 · In the camera</h2>
-<ol><li data-cs="Kameru vypni, vlož kartu, zapni. Asi po 30 s kamera promluví (anglicky + česky, pokud máš hlášky) a modrá LED zabliká.">Power off, insert the card, power on. After ~30 s the camera speaks (English + Czech, if you added voices).</li>
-<li data-cs="Nová kamera: zálohuje původní firmware na kartu (leo/backup/&lt;MAC&gt;), <b>sestaví nový firmware</b> (několik minut), zapíše ho (~30 s) a restartuje se. Kameru během toho neodpojuj.">New camera: it backs up the original firmware to the card (leo/backup/&lt;MAC&gt;), <b>builds the new firmware</b> (a few minutes), writes it (~30 s) and restarts. Do not unplug the camera meanwhile.</li>
-<li data-cs="Neznámá kamera nebo verze: nic se nezapíše.">Unknown camera or version: nothing is written.</li>
+<ol><li data-cs="Kameru vypni, vlož kartu, zapni. Asi po 30 s kamera promluví (anglicky, pak česky) a <b>během celé instalace hlásí, co dělá</b>: kontrola, záloha, sestavení, zápis, hotovo.">Power off, insert the card, power on. After ~30 s the camera speaks (English, then Czech) and <b>announces every step during the whole installation</b>: check, backup, build, write, done.</li>
+<li data-cs="Nová kamera: zálohuje původní firmware na kartu (leo/backup/&amp;lt;MAC&amp;gt;), <b>sestaví nový firmware</b> (několik minut), zapíše ho (~30 s) a restartuje se. Kameru během toho neodpojuj.">New camera: it backs up the original firmware to the card (leo/backup/&lt;MAC&gt;), <b>builds the new firmware</b> (a few minutes), writes it (~30 s) and restarts. Do not unplug the camera meanwhile.</li>
+<li data-cs="Neznámá kamera nebo verze: kamera to řekne a nic se nezapíše.">Unknown camera or version: the camera says so and nothing is written.</li>
 <li data-cs="Kartu vyndej a zálohu z leo/backup si ulož do PC!">Remove the card and keep the backup from leo/backup on your PC!</li>
-<li data-cs="Krátký stisk reset tlačítka = kamera řekne svou IP adresu.">Short press of the reset button = the camera says its IP address.</li>
-<li data-cs="Wi-Fi: podrž reset tlačítko 2 s a ukaž kameře QR kód Wi-Fi z mobilu (Nastavení Wi-Fi → Sdílet).">Wi-Fi: hold the reset button for 2 s and show the camera your phone's Wi-Fi QR code (Wi-Fi settings → Share).</li>
-<li data-cs="Web kamery: http://&lt;IP kamery&gt;/ (IP najdeš v routeru).">Camera web page: http://&lt;camera IP&gt;/ (find the IP in your router).</li></ol>
+<li data-cs="Wi-Fi: podrž reset tlačítko 2 s (pípne) a ukaž kameře QR kód Wi-Fi z mobilu (Nastavení Wi-Fi → Sdílet). <b>Po úspěšném připojení kamera řekne svou IP adresu</b> (anglicky i česky).">Wi-Fi: hold the reset button for 2 s (beep) and show the camera your phone's Wi-Fi QR code (Wi-Fi settings → Share). <b>After connecting, the camera says its IP address</b> (English and Czech).</li>
+<li data-cs="<b>Krátký stisk reset tlačítka</b> = kamera kdykoli řekne svou IP adresu.">A <b>short press of the reset button</b> = the camera says its IP address at any time.</li>
+<li data-cs="Web kamery: http://&amp;lt;IP kamery&amp;gt;/ – nastavení, MQTT / Home Assistant, zvuky, heslo, aktualizace.">Camera web page: http://&lt;camera IP&gt;/ – settings, MQTT / Home Assistant, sounds, password, updates.</li>
+<li data-cs="Tlačítko: 5 s = smaže heslo webu, 15 s = tovární nastavení (kamera vždy řekne, co udělala).">Button: 5 s = clears the web password, 15 s = factory settings (the camera always says what it did).</li></ol>
 <p class="hint" data-cs="Log instalace: logs/leo_autoflash.log na kartě.">Installer log: logs/leo_autoflash.log on the card.</p></div>
 </main>
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(2,8,16,.72);z-index:9;align-items:center;justify-content:center"><div class="card warn" style="max-width:440px;margin:20px">
+<h2 data-cs="⚠️ Nejdřív souhlas">⚠️ Agreement first</h2><p data-cs="Před zápisem musíš nahoře zaškrtnout <b>„Rozumím a souhlasím – postupuji na vlastní riziko.“</b>">Before writing you must tick <b>"I understand and agree – I proceed at my own risk."</b> at the top.</p>
+<button class="btn" id="mok" data-cs="Přejít na souhlas">Go to the agreement</button></div></div>
 <footer>© leotech.cz · MIT · <a href="https://github.com/Leontech/lsc-camera-leotech">GitHub</a> · <a href="https://ko-fi.com/leotechcz">☕ Ko-fi</a></footer>
 <script>
 const $=s=>document.querySelector(s);
@@ -77,12 +83,17 @@ const T=(cs,en)=>L=='cs'?cs:en;
 const TOOLKIT='tasarren/lsc-tuya-toolkit', TK_SHA='396db8a835d9787b2997de038b48f645c837e754';
 const STOCK_MD5=['45f7b0ea5a8a92bc2defe9c1e4769a2a'];
 const KIT=['leo_autoflash.sh','leo_build_fw.sh','leo_say','flash_tool','custom_md5.txt','system_md5.txt','bin/unsquashfs','bin/mksquashfs',
- 'payload/ak_rtsp','payload/flash_tool','payload/ak_rtsp_wrapper.sh','payload/_ht_process.ini','payload/leo_sounds/sys/beep.s16','payload/leo_sounds/sys/ding3.s16'];
+ 'payload/ak_rtsp','payload/flash_tool','payload/ak_rtsp_wrapper.sh','payload/_ht_process.ini','payload/leo_sounds/sys/beep.s16','payload/leo_sounds/sys/ding3.s16','voice/CREDITS.txt',
+ ...'sd_already sd_backup sd_buildfail sd_building sd_done sd_failed sd_fatal sd_flashing sd_hello sd_nomem sd_restore sd_restored sd_unsupported'.split(' ').map(n=>'voice/'+n+'.adp'),
+ ...'factory ip_cz_0 ip_cz_1 ip_cz_2 ip_cz_3 ip_cz_4 ip_cz_5 ip_cz_6 ip_cz_7 ip_cz_8 ip_cz_9 ip_cz_dot ip_cz_intro ip_en_0 ip_en_1 ip_en_2 ip_en_3 ip_en_4 ip_en_5 ip_en_6 ip_en_7 ip_en_8 ip_en_9 ip_en_dot ip_en_intro ip_none pass_reset qr_bad qr_cancel qr_read qr_start qr_timeout wifi_fail wifi_ok'.split(' ').map(n=>'payload/leo_sounds/sys/'+n+'.adp')];
 function voiceDest(n){if(/^sd_.*\.adp$/i.test(n))return 'leo/voice/'+n;if(/\.adp$/i.test(n))return 'leo/payload/leo_sounds/sys/'+n;if(/\.s16$/i.test(n))return 'leo/payload/leo_sounds/'+n;return null}
 let img=null;
 function log(s,c){const d=document.createElement('div');d.textContent=s;if(c)d.className=c;$('#log').appendChild(d);$('#log').scrollTop=1e9}
-function upd(){$('#go').disabled=!($('#agree').checked&&window.showDirectoryPicker)}
-$('#agree').onchange=upd;
+function upd(){$('#go').disabled=!window.showDirectoryPicker}
+function needAgree(){if($('#agree').checked)return false;$('#modal').style.display='flex';return true}
+$('#mok').onclick=()=>{$('#modal').style.display='none';const a=$('#agree');a.scrollIntoView({behavior:'smooth',block:'center'});a.parentElement.style.outline='2px solid var(--warn)';a.parentElement.style.borderRadius='8px';a.focus()};
+$('#modal').onclick=e=>{if(e.target.id==='modal')e.target.style.display='none'};
+$('#agree').onchange=()=>{$('#agree').parentElement.style.outline=''};upd();
 if(!window.showDirectoryPicker){log(T('Tento prohlížeč neumí zapisovat do složek – použij Chrome nebo Edge na PC.','This browser cannot write to folders – use Chrome or Edge on a computer.'),'bad')}
 $('#img').onchange=async e=>{img=null;const f=e.target.files[0];if(!f){upd();return}
  const head=new Uint8Array(await f.slice(0,4).arrayBuffer());const magic=String.fromCharCode(...head);
@@ -97,7 +108,7 @@ $('#voice').onchange=e=>{$('#vinfo').textContent=e.target.files.length?('✓ '+e
 $('#rfiles').onchange=async e=>{rbin=null;rmd5=null;for(const f of e.target.files){if(/mtdblock7\.bin$/i.test(f.name))rbin=f;if(/md5sums\.txt$/i.test(f.name))rmd5=f}
  let ok=false;if(rbin){const h=String.fromCharCode(...new Uint8Array(await rbin.slice(0,4).arrayBuffer()));ok=rbin.size===5242880&&h==='hsqs'}
  $('#rinfo').textContent=ok?('✓ mtdblock7.bin'+(rmd5?' + md5sums.txt':'')):T('✗ chybí platný mtdblock7.bin','✗ missing a valid mtdblock7.bin');$('#rinfo').className=ok?'ok':'bad';
- if(!ok)rbin=null;$('#rgo').disabled=!(rbin&&window.showDirectoryPicker)};
+ if(!ok)rbin=null};
 async function writeKit(root,lg){
   for await(const [n] of root.entries()){if(/\.bin$/i.test(n))throw new Error(T('Na kartě je soubor '+n+' – smaž ho (spustil by tovární aktualizaci).','The card root contains '+n+' – delete it (it would trigger the vendor update).'))}
   lg(T('Stahuji seznam souborů toolkitu…','Fetching toolkit file list…'));
@@ -114,7 +125,7 @@ async function writeKit(root,lg){
   await put(root,'leo/stock_md5.txt',te.encode(STOCK_MD5.map(m=>m+'  stock 3215672.3').join('\n')+'\n'));
   let nv=0;for(const v of $('#voice').files){const d=voiceDest(v.name);if(!d)continue;await put(root,d,v);nv++}if(nv)lg('✓ '+nv+T(' hlasových/zvukových souborů',' voice/sound files'))
 }
-$('#rgo').onclick=async()=>{if(!$('#agree').checked){alert(T('Nejdřív zaškrtni souhlas nahoře.','Tick the agreement at the top first.'));return}
+$('#rgo').onclick=async()=>{if(needAgree())return;if(!rbin){$('#rinfo').textContent=T('✗ nejdřív vyber soubory zálohy (mtdblock7.bin)','✗ choose the backup files first (mtdblock7.bin)');$('#rinfo').className='bad';return}
  let root;try{root=await window.showDirectoryPicker({mode:'readwrite',id:'lsc-sd'})}catch(e){return}
  const box=$('#rlog');box.textContent='';const lg=(t,c)=>{const d=document.createElement('div');d.textContent=t;if(c)d.className=c;box.appendChild(d)};
  $('#rgo').disabled=true;
@@ -122,7 +133,7 @@ $('#rgo').onclick=async()=>{if(!$('#agree').checked){alert(T('Nejdřív zaškrtn
   lg(T('Hotovo – karta obnoví původní firmware. Vlož ji do vypnuté kamery a zapni.','Done – this card restores the original firmware. Insert it into the powered-off camera and switch on.'),'ok')}
  catch(e){lg('✗ '+e.message,'bad')}
  $('#rgo').disabled=false};
-$('#go').onclick=async()=>{let root;try{root=await window.showDirectoryPicker({mode:'readwrite',id:'lsc-sd'})}catch(e){return}
+$('#go').onclick=async()=>{if(needAgree())return;let root;try{root=await window.showDirectoryPicker({mode:'readwrite',id:'lsc-sd'})}catch(e){return}
  $('#go').disabled=true;$('#log').textContent='';
  try{
   await writeKit(root,log);

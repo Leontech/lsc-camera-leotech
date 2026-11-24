@@ -11,7 +11,7 @@ Action **LSC Smart Connect** indoor IP camera 1080p, item **3215672**, label "No
 ## A) SD card installer (recommended)
 > 💡 Do not connect a new camera to the LSC app / cloud first – an online update could install an untested firmware.
 1. Format a microSD card (≤ 32 GB) as **FAT32**.
-2. Open **https://leontech.github.io/lsc-camera-leotech/** in Chrome/Edge on a computer, tick the disclaimer, (optionally add voice files) and choose the card – the page writes everything.
+2. Open **https://leontech.github.io/lsc-camera-leotech/** in Chrome/Edge on a computer, tick the disclaimer and choose the card – the page writes everything, including the EN + CZ voice prompts. The camera talks during the whole installation and tells you each step.
 3. Camera off → insert card → camera on. After ~30 s: backup of the original firmware to `leo/backup/<MAC>` on the card, **the camera builds the new firmware itself** (a few minutes), writes it (~30 s) and restarts. Unknown camera/firmware → nothing is written.
 4. Keep the backup from the card! Wi-Fi: hold reset 2 s and show the phone's Wi-Fi QR code. Short press = the camera says its IP.
 

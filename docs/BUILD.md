@@ -10,7 +10,8 @@ Requirements: Linux or WSL2 (Ubuntu), `git`, `python3`, `squashfs-tools`, intern
    git clone https://github.com/Leontech/lsc-camera-leotech && cd lsc-camera-leotech
    git clone https://github.com/OpenIPC/smolrtsp src/smolrtsp   # see upstream docs for the build of smolrtsp
    ```
-3. Optional: voice prompts – `sdkit/voice/make_voice.sh`, copy `qr_* wifi_* pass_reset factory` `.adp` files to
+3. Voice prompts – ready-made ones are in `docs/kit/voice/` (SD installer) and `docs/kit/payload/leo_sounds/sys/`
+   (firmware). To regenerate them (Piper TTS, open voices): `sdkit/voice/make_voice.sh`. Copy the `out/sys/*.adp` files to
    `src/ak_rtsp/leo_sounds/sys/` (+ `beep.s16`, `ding3.s16` short beeps) and your own sounds as `.s16`
    (8 kHz mono s16le) to `src/ak_rtsp/leo_sounds/`.
 4. Build:

@@ -88,6 +88,7 @@ adds ak_rtsp and packs the new image – no PC tools needed.
 | RTSP library | [OpenIPC/smolrtsp](https://github.com/OpenIPC/smolrtsp) | MIT |
 | QR decoder | [dlbeer/quirc](https://github.com/dlbeer/quirc) | ISC |
 | leotech additions (web, MQTT, speaker, QR Wi-Fi, OTA, button, SD installer, voice tool) | Leoš Vilím / [leotech.cz](https://leotech.cz) | MIT |
+| Voice prompts (generated with [Piper](https://github.com/rhasspy/piper)) | EN: en_GB-cori (LibriVox, public domain) · CZ: cs_CZ-kasandra © Ondřej Šimek | CC BY 4.0 – see `docs/kit/voice/CREDITS.txt` |
 
 This project is not affiliated with Action, LSC, Tuya or Anyka. All trademarks belong to their owners.
 
