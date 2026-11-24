@@ -21,7 +21,17 @@ echo "=== leo_autoflash $(date) ==="
 # give the system time to start (audio driver, network, ak_rtsp speaker service)
 sleep 25
 
-MAC=$(cat /sys/class/net/wlan0/address 2>/dev/null | tr -d ':\n')
+# original firmware: the vendor app anyka_ipc holds the speaker and ~3 MB RAM. Replace it by a
+# sleeping stub (bind mount, RAM only) - its supervisor restarts the stub, the watchdog stays fed.
+if [ -x /usr/bin/anyka_ipc ] && pidof anyka_ipc >/dev/null 2>&1; then
+    printf '#!/bin/sh\nexec sleep 999999\n' > /tmp/leo_ipc_stub; chmod +x /tmp/leo_ipc_stub
+    if mount --bind /tmp/leo_ipc_stub /usr/bin/anyka_ipc; then
+        killall anyka_ipc 2>/dev/null; sleep 2; killall -9 anyka_ipc 2>/dev/null; sleep 3
+        echo "vendor app stopped"
+    fi
+fi
+
+MAC=$(cat /sys/class/net/wlan0/address 2>/dev/null | sed 's/://g')
 [ -n "$MAC" ] || MAC=unknown
 echo "camera MAC: $MAC"
 
@@ -71,7 +81,7 @@ if [ -f "$RS/mtdblock7.bin" ]; then
     say sd_restore
     sync
     /tmp/leo_flash_tool "$R" /dev/mtd7 >/tmp/leo_flash.log 2>&1
-    RC=$?; cat /tmp/leo_flash.log
+    RC=$?; tail -n 3 /tmp/leo_flash.log
     if [ "$RC" -eq 0 ]; then
         mv "$RS" "$L/restore.done.$(date +%s)" 2>/dev/null; sync
         echo "ORIGINAL FIRMWARE RESTORED -> reboot"
@@ -161,7 +171,7 @@ say sd_flashing
 sync
 /tmp/leo_flash_tool "$IMG" /dev/mtd7 >/tmp/leo_flash.log 2>&1
 RC=$?
-cat /tmp/leo_flash.log
+tail -n 3 /tmp/leo_flash.log
 if [ "$RC" -eq 0 ]; then
     touch "$L/state/$MAC.$NEW"
     [ "$KIND" = "built" ] && echo "$NEW $PAY" > "$L/state/$MAC.built"
@@ -173,7 +183,7 @@ fi
 echo "flash failed ($RC) - restoring previous APP"
 /tmp/leo_flash_tool "$PREV" /dev/mtd7 >/tmp/leo_flash.log 2>&1
 RRC=$?
-cat /tmp/leo_flash.log
+tail -n 3 /tmp/leo_flash.log
 if [ "$RRC" -eq 0 ]; then
     /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; reboot; exit 2
 fi

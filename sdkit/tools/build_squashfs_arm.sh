@@ -14,6 +14,8 @@ export CC=$W/zcc AR=$W/zar CFLAGS=-O2
 (cd zlib-1.3.1 && CHOST=arm ./configure --static --prefix=$P && make libz.a && make install)
 (cd xz-5.6.3 && ./configure --host=arm-linux-musleabi --prefix=$P --enable-static --disable-shared --disable-xz --disable-xzdec --disable-lzmadec --disable-lzmainfo --disable-scripts --disable-doc --disable-nls --disable-threads && make && make install)
 cd squashfs-tools-4.6.1/squashfs-tools
+# the camera has only ~45 MB RAM: lower the hard 64 MB minimum (the build itself runs with -mem 16M)
+sed -i "s/#define SQUASHFS_LOWMEM 64/#define SQUASHFS_LOWMEM 16/" mksquashfs.h
 make CC=$W/zcc GZIP_SUPPORT=1 XZ_SUPPORT=1 LZO_SUPPORT=0 LZ4_SUPPORT=0 ZSTD_SUPPORT=0 LZMA_XZ_SUPPORT=0 XATTR_SUPPORT=0 EXTRA_CFLAGS="-O2 -I$P/include" EXTRA_LDFLAGS="-static -L$P/lib" mksquashfs unsquashfs
 for b in mksquashfs unsquashfs; do zig objcopy --strip-all $b ../../../$b; done
 echo "built: $W/mksquashfs $W/unsquashfs"

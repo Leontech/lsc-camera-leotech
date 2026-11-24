@@ -46,10 +46,13 @@ log "squashfs size $SIZE"
 if [ "$SIZE" -gt "$TARGET" ]; then log "image too big"; rm -rf "$W"; exit 3; fi
 PAD=$((TARGET - SIZE))
 mv -f "$NEWSQ" "$OUT" || exit 3
-# 0xFF padding in 4 KiB blocks (mksquashfs pads to 4 KiB) + remainder
-BLK=$((PAD / 4096)); REM=$((PAD % 4096))
-[ "$BLK" -gt 0 ] && dd if=/dev/zero bs=4096 count="$BLK" 2>/dev/null | tr '\000' '\377' >> "$OUT"
-[ "$REM" -gt 0 ] && dd if=/dev/zero bs=1 count="$REM" 2>/dev/null | tr '\000' '\377' >> "$OUT"
+# 0xFF padding (the camera has no 'tr'): build a 64 KiB 0xFF block by doubling, append it, then the rest
+FF=/tmp/leo_ff; printf '\377' > "$FF"; S=1
+while [ "$S" -lt 65536 ]; do cat "$FF" "$FF" > "$FF.2" && mv -f "$FF.2" "$FF"; S=$((S * 2)); done
+N=$PAD
+while [ "$N" -ge 65536 ]; do cat "$FF" >> "$OUT"; N=$((N - 65536)); done
+[ "$N" -gt 0 ] && dd if="$FF" bs="$N" count=1 2>/dev/null >> "$OUT"
+rm -f "$FF"
 sync
 FINAL=$(stat -c%s "$OUT")
 [ "$FINAL" = "$TARGET" ] || { log "padding failed ($FINAL)"; exit 3; }
