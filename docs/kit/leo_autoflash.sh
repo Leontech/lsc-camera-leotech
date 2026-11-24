@@ -31,6 +31,27 @@ if [ -x /usr/bin/anyka_ipc ] && pidof anyka_ipc >/dev/null 2>&1; then
     fi
 fi
 
+# leotech firmware running: before real work (backup, build, flash) stop ak_rtsp the same way, so the
+# voice goes straight to the audio chip (a busy ak_rtsp lets the speaker hiss), the CPU/RAM are free for
+# the build and nothing runs from the APP partition while it is rewritten. If nothing gets written,
+# ak_rtsp is started again on exit.
+APP_STOPPED=0
+stop_app() {
+    [ "$APP_STOPPED" = 1 ] && return
+    [ -x /usr/bin/ak_rtsp ] && pidof ak_rtsp >/dev/null 2>&1 || return
+    printf '#!/bin/sh\nexec sleep 999998\n' > /tmp/leo_app_stub; chmod +x /tmp/leo_app_stub
+    mount --bind /tmp/leo_app_stub /usr/bin/ak_rtsp || return
+    killall ak_rtsp 2>/dev/null; sleep 2; killall -9 ak_rtsp 2>/dev/null; sleep 2
+    APP_STOPPED=1; echo "ak_rtsp stopped"
+}
+resume_app() {
+    [ "$APP_STOPPED" = 1 ] || return
+    umount /usr/bin/ak_rtsp 2>/dev/null
+    for p in $(ps | grep "sleep 999998" | grep -v grep | awk '{print $1}'); do kill "$p" 2>/dev/null; done
+    APP_STOPPED=0; echo "ak_rtsp started again"
+}
+trap resume_app EXIT
+
 MAC=$(cat /sys/class/net/wlan0/address 2>/dev/null | sed 's/://g')
 [ -n "$MAC" ] || MAC=unknown
 echo "camera MAC: $MAC"
@@ -78,6 +99,7 @@ if [ -f "$RS/mtdblock7.bin" ]; then
     dd if=/dev/mtdblock7 of="$BK/app_before_restore_$CUR.bin" bs=64k 2>/dev/null; sync
     if [ -f "$L/flash_tool" ]; then cp "$L/flash_tool" /tmp/leo_flash_tool; else cp /usr/bin/flash_tool /tmp/leo_flash_tool; fi; chmod +x /tmp/leo_flash_tool
     cp "$L/leo_say" /tmp/leo_say && chmod +x /tmp/leo_say
+    stop_app
     say sd_restore
     sync
     /tmp/leo_flash_tool "$R" /dev/mtd7 >/tmp/leo_flash.log 2>&1
@@ -86,11 +108,11 @@ if [ -f "$RS/mtdblock7.bin" ]; then
         mv "$RS" "$L/restore.done.$(date +%s)" 2>/dev/null; sync
         echo "$RMD5" > "$L/state/$MAC.restored"; sync   # do not install again from this card
         echo "ORIGINAL FIRMWARE RESTORED -> reboot"
-        /tmp/leo_say "$L/voice/sd_restored.adp"; sync; sleep 2; reboot; exit 0
+        /tmp/leo_say "$L/voice/sd_restored.adp"; sync; sleep 2; APP_STOPPED=0; reboot; exit 0
     fi
     echo "restore flash failed ($RC) - writing back previous APP"
     /tmp/leo_flash_tool "$BK/app_before_restore_$CUR.bin" /dev/mtd7 >/tmp/leo_flash.log 2>&1
-    if [ $? -eq 0 ]; then /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; reboot; exit 2; fi
+    if [ $? -eq 0 ]; then /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; APP_STOPPED=0; reboot; exit 2; fi
     /tmp/leo_say "$L/voice/sd_fatal.adp"; exit 3
 fi
 
@@ -117,6 +139,7 @@ if [ -n "$IMG" ]; then
         if [ -f "$L/state/$MAC.$NEW" ]; then echo "already installed (announced before) - silent"; exit 0; fi
         touch "$L/state/$MAC.$NEW"; sync; echo "already installed"; say sd_already; exit 0
     fi
+    stop_app
     say sd_hello
     KIND=""
     grep -qi "^$CUR" "$L/stock_md5.txt" 2>/dev/null && KIND=stock
@@ -134,6 +157,7 @@ else
     if [ -f "$L/state/$MAC.built" ] && [ "$(cat "$L/state/$MAC.built")" = "$CUR $PAY" ]; then
         echo "this build is already installed - silent"; exit 0
     fi
+    stop_app
     say sd_hello
     STOCKSRC=""
     if grep -qi "^$CUR" "$L/stock_md5.txt" 2>/dev/null; then
@@ -186,14 +210,14 @@ if [ "$RC" -eq 0 ]; then
     sync
     echo "FLASH OK -> reboot"
     /tmp/leo_say "$L/voice/sd_done.adp"
-    sync; sleep 2; reboot; exit 0
+    sync; sleep 2; APP_STOPPED=0; reboot; exit 0
 fi
 echo "flash failed ($RC) - restoring previous APP"
 /tmp/leo_flash_tool "$PREV" /dev/mtd7 >/tmp/leo_flash.log 2>&1
 RRC=$?
 tail -n 3 /tmp/leo_flash.log
 if [ "$RRC" -eq 0 ]; then
-    /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; reboot; exit 2
+    /tmp/leo_say "$L/voice/sd_failed.adp"; sync; sleep 2; APP_STOPPED=0; reboot; exit 2
 fi
 echo "RESTORE FAILED ($RRC) - keep the camera powered"
 /tmp/leo_say "$L/voice/sd_fatal.adp"
