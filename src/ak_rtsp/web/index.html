@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kamera · leotech.cz</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root{--brand:#1A90FF;--brand-hi:#7CC6FF;--fg:#E4ECF7;--mut:#8EA3BE;--bg:#08111C;--card:#0F1C2C;--card2:#13243A;--line:#1E3350;--ok:#2BD47D;--bad:#FF5A6A;
+--logo-mark:var(--brand);--logo-tag:var(--brand-hi);--logo-word:var(--fg)}
+*{box-sizing:border-box}html,body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#10294a 0,var(--bg) 60%) fixed;color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--brand-hi);text-decoration:none}a:hover{text-decoration:underline}
+header{display:flex;align-items:center;gap:18px;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(8,17,28,.78);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+header a.lg{display:flex}header svg.logo{height:34px;width:auto}
+header .dev{font-weight:600;font-size:17px}header .sub{color:var(--mut);font-size:12px}
+.pills{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--card2);border:1px solid var(--line);color:var(--mut);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:#1f5a3e}.pill.bad{color:var(--bad);border-color:#5a2430}
+.pill.lnk{color:var(--brand-hi);cursor:pointer}.pill.kofi{color:#ffd28a;border-color:#5a4520}
+nav{display:flex;gap:4px;padding:10px 22px 0;flex-wrap:wrap;max-width:1060px;margin:0 auto}
+nav button{background:none;border:0;color:var(--mut);padding:10px 16px;border-radius:10px 10px 0 0;font:inherit;cursor:pointer;border-bottom:2px solid transparent}
+nav button.on{color:var(--fg);border-bottom-color:var(--brand);background:var(--card)}
+main{max-width:1060px;margin:0 auto;padding:18px 22px 40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px}
+.card{background:linear-gradient(180deg,var(--card),#0c1826);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.card h3{margin:0 0 14px;font-size:15px;letter-spacing:.3px;color:var(--brand-hi);font-weight:600}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed #1a2d46}
+.row:last-child{border-bottom:0}.row small,.hint{color:var(--mut);font-size:12.5px}
+.seg{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:none;border:0;color:var(--mut);padding:7px 14px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--brand);color:#fff}
+.sw{position:relative;width:46px;height:26px;flex:none;display:inline-block}.sw input{display:none}
+.sw span{position:absolute;inset:0;background:#24364f;border-radius:99px;transition:.2s;cursor:pointer}
+.sw span:after{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#cfe0f5;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--brand)}.sw input:checked+span:after{left:23px;background:#fff}
+input[type=range]{width:170px;accent-color:var(--brand);vertical-align:middle}
+input[type=text],input[type=password],input[type=number]{background:#0a1522;border:1px solid var(--line);color:var(--fg);border-radius:10px;padding:9px 11px;font:inherit;width:100%}
+input[type=file]{color:var(--mut)}
+input:focus{outline:2px solid #1a90ff55;border-color:var(--brand)}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.sec{background:var(--card2);color:var(--fg);border:1px solid var(--line);font-weight:500}
+.btn.red{background:#3a1520;color:#ff9aa5;border:1px solid #5a2430}
+.btn:disabled{opacity:.5;cursor:default}.btn.sm{padding:5px 11px;font-size:13px}
+.snd{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #1a2d46}.snd:last-child{border:0}
+.snd .n{flex:1;font-family:ui-monospace,Consolas,monospace;font-size:13.5px}
+.tag{font-size:11px;padding:2px 7px;border-radius:6px;background:#132b47;color:var(--brand-hi)}
+.f{display:grid;gap:10px}.f2{display:grid;grid-template-columns:1fr 110px;gap:10px}
+.bt{display:flex;gap:8px;flex-wrap:wrap}
+.val{min-width:34px;text-align:right;color:var(--brand-hi);font-variant-numeric:tabular-nums}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:#0a1522;border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:block;white-space:pre-wrap;word-break:break-all;color:#cfe0f5}
+.bar{height:8px;background:#0a1522;border-radius:9px;overflow:hidden;border:1px solid var(--line)}.bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .2s}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--card2);border:1px solid var(--line);padding:10px 18px;border-radius:12px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+#toast.show{opacity:1}#toast.err{border-color:#5a2430;color:#ffb3bb}
+.ov{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,10,18,.88);z-index:40}
+.ov.show{display:grid}.ov .card{width:min(390px,92vw)}.ov svg.logo{width:100%;height:auto;margin:4px 0 18px}
+.hide{display:none!important}
+footer{color:var(--mut);font-size:12.5px;text-align:center;padding:26px 0 10px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+</style></head><body>
+<!--LOGO-->
+<div id="login" class="ov"><div class="card"><svg class="logo" viewBox="0 0 18410 3980"><use href="#lt-logo"/></svg>
+ <h3 id="lt"></h3><div class="f">
+ <p id="lsetup" class="hint hide" data-en="First start: choose a password for the web interface (min. 6 characters), or leave it empty to run without a password – you can turn it on later in System. A forgotten password is cleared by holding the reset button for 5 s.">První spuštění: zvol heslo pro webové rozhraní (min. 6 znaků), nebo nech prázdné a stránka poběží bez hesla – zapnout ho jde kdykoli v záložce Systém. Zapomenuté heslo smažeš podržením reset tlačítka na kameře 5 s.</p>
+ <input type="password" id="lp" autocomplete="current-password">
+ <input type="password" id="lp2" class="hide" autocomplete="new-password" placeholder="Heslo znovu" data-enp="Repeat password">
+ <button class="btn" id="lb"></button></div></div></div>
+
+<header><a class="lg" href="https://leotech.cz" target="_blank" rel="noopener" title="leotech.cz"><svg class="logo" viewBox="0 0 18410 3980" role="img" aria-label="LEOTECH.CZ"><use href="#lt-logo"/></svg></a>
+ <div><div class="dev" id="hname">Kamera</div><div class="sub" id="hsub">LSC Smart Connect · ak_rtsp</div></div>
+ <div class="pills"><span class="pill" id="pnight">–</span><span class="pill" id="pmqtt">MQTT</span><span class="pill" id="pfw">fw</span>
+ <a class="pill kofi" href="https://ko-fi.com/leotechcz" target="_blank" rel="noopener" data-en="☕ Support">☕ Podpořit</a><span class="pill lnk" id="lang">EN</span></div></header>
+<nav><button data-t="obraz" class="on" data-en="Image">Obraz</button><button data-t="zvuk" data-en="Sound">Zvuk</button><button data-t="mqtt">MQTT / Home Assistant</button><button data-t="sys" data-en="System">Systém</button></nav>
+<main>
+<section id="t-obraz"><div class="grid">
+ <div class="card"><h3 data-en="Day / night">Den / noc</h3>
+  <div class="row"><span data-en="Mode">Režim</span><div class="seg" data-p="night.mode"><button data-v="auto">auto</button><button data-v="day" data-en="day">den</button><button data-v="night" data-en="night">noc</button></div></div>
+  <div class="row"><span data-en="IR illuminator">IR přísvit</span><div class="seg" data-p="ir.led"><button data-v="auto">auto</button><button data-v="on" data-en="on">zap</button><button data-v="off" data-en="off">vyp</button></div></div>
+  <div class="row"><span data-en="Now">Aktuálně</span><span id="snight" class="val">–</span></div>
+  <div class="row"><span data-en="IR illuminator lit">IR přísvit svítí</span><span id="sir" class="val">–</span></div></div>
+ <div class="card"><h3 data-en="Orientation and LED">Orientace a LED</h3>
+  <div class="row"><span data-en="Flip image (upside down)">Otočit obraz (vzhůru nohama)</span><label class="sw"><input type="checkbox" data-p="image.flip"><span></span></label></div>
+  <div class="row"><span data-en="Mirror image">Zrcadlit obraz</span><label class="sw"><input type="checkbox" data-p="image.mirror"><span></span></label></div>
+  <div class="row"><span data-en="Status LED">Stavová LED</span><label class="sw"><input type="checkbox" data-p="led.state"><span></span></label></div>
+  <p class="hint" data-en="Changes are stored in the camera and survive a restart.">Změny se ukládají do kamery a přežijí restart.</p></div>
+ <div class="card"><h3 data-en="Image">Obraz</h3>
+  <div class="row"><span data-en="Brightness">Jas</span><span><input type="range" min="-50" max="50" data-p="isp.brightness"> <b class="val"></b></span></div>
+  <div class="row"><span data-en="Contrast">Kontrast</span><span><input type="range" min="-50" max="50" data-p="isp.contrast"> <b class="val"></b></span></div>
+  <div class="row"><span data-en="Saturation">Sytost barev</span><span><input type="range" min="-50" max="50" data-p="isp.saturation"> <b class="val"></b></span></div>
+  <div class="row"><span data-en="Sharpness">Ostrost</span><span><input type="range" min="-50" max="50" data-p="isp.sharpness"> <b class="val"></b></span></div></div>
+ <div class="card"><h3 data-en="Preview">Náhled</h3><canvas id="cv" width="640" height="360" style="width:100%;border-radius:10px;background:#0a1522;display:block"></canvas>
+  <div class="bt" style="margin-top:10px"><button class="btn sec sm" id="cvb" data-en="Refresh snapshot">Obnovit snímek</button><label class="row" style="border:0;padding:0;gap:8px"><span class="hint" data-en="auto 1 s">auto 1 s</span><label class="sw"><input type="checkbox" id="cva"><span></span></label></label></div></div>
+ <div class="card"><h3>Stream</h3><p class="hint">RTSP (Frigate / VLC):</p><code id="rtsp">rtsp://…</code>
+  <p class="hint" data-en="Main stream 1920×1080 H.264.">Hlavní stream 1920×1080 H.264.</p></div>
+</div></section>
+
+<section id="t-zvuk" class="hide"><div class="grid">
+ <div class="card"><h3 data-en="Volume">Hlasitost</h3>
+  <div class="row"><span data-en="Speaker">Reproduktor</span><span><input type="range" min="0" max="200" step="5" data-p="audio.volume"> <b class="val"></b> %</span></div>
+  <div class="row"><span data-en="Playback">Přehrávání</span><button class="btn sec sm" onclick="api('stop')" data-en="■ Stop">■ Zastavit</button></div></div>
+ <div class="card"><h3 data-en="Sounds in the camera">Zvuky v kameře</h3><div id="slist"></div><p class="hint" id="sfree"></p>
+  <button class="btn sec sm" id="srest" data-en="Restore built-in sounds">Obnovit vestavěné zvuky</button></div>
+ <div class="card"><h3 data-en="Upload your own sound">Nahrát vlastní zvuk</h3><div class="f">
+  <input type="file" id="ffile" accept="audio/*,.wav,.mp3,.ogg,.m4a">
+  <input type="text" id="fname" maxlength="40" placeholder="název (a-z, 0-9, _)" data-enp="name (a-z, 0-9, _)">
+  <div class="row" style="border:0;padding:0"><span data-en="Normalize volume">Normalizovat hlasitost</span><label class="sw"><input type="checkbox" id="fnorm" checked><span></span></label></div>
+  <div class="hint" id="finfo" data-en="MP3 / WAV / OGG… converted in the browser to 8 kHz mono. Max 20 s.">MP3 / WAV / OGG… převede se v prohlížeči na 8 kHz mono. Max 20 s.</div>
+  <div class="bt"><button class="btn" id="fsave" disabled data-en="Save to camera">Uložit do kamery</button><button class="btn sec" id="fplay" disabled data-en="▶ Play now (don't save)">▶ Přehrát hned (bez uložení)</button></div></div></div>
+ <div class="card"><h3 data-en="Live sound / own stream">Živý zvuk / vlastní stream</h3>
+  <p class="hint" data-en="The camera accepts sound on TCP port 8093 (WAV or raw s16le, 8 kHz mono). A file from a PC (ffmpeg):">Kamera přijímá zvuk na TCP portu 8093 (WAV nebo raw s16le, 8 kHz mono). Soubor z PC (ffmpeg):</p>
+  <code id="ffcmd"></code><p class="hint" data-en="PC microphone live (Windows, device name from: ffmpeg -list_devices true -f dshow -i dummy):">Mikrofon PC naživo (Windows, název zařízení z: ffmpeg -list_devices true -f dshow -i dummy):</p><code id="ffmic"></code>
+  <p class="hint" data-en="From Home Assistant (automation action):">Z Home Assistant (akce v automatizaci):</p><code id="haex"></code></div>
+</div></section>
+
+<section id="t-mqtt" class="hide"><div class="grid">
+ <div class="card"><h3>MQTT broker</h3><div class="f">
+  <div class="row" style="padding-top:0"><span data-en="Enabled">Zapnuto</span><label class="sw"><input type="checkbox" id="men"><span></span></label></div>
+  <div class="f2"><input type="text" id="mhost" placeholder="server (IP / host)"><input type="number" id="mport" placeholder="1883"></div>
+  <input type="text" id="muser" autocomplete="off" placeholder="uživatel" data-enp="user">
+  <input type="password" id="mpass" autocomplete="new-password">
+  <div class="bt"><button class="btn" id="msave" data-en="Save and connect">Uložit a připojit</button><button class="btn sec" id="mclr" data-en="Delete stored password">Smazat uložené heslo</button></div>
+  <div class="row"><span data-en="Status">Stav</span><b id="mstat" class="val">–</b></div></div></div>
+ <div class="card"><h3>Home Assistant</h3>
+  <p class="hint" data-en="The camera appears in HA automatically (MQTT discovery) as a device named after the camera (System tab): day/night mode, IR, LED, flip, mirror, volume, brightness/contrast/saturation/sharpness and a button for every sound.">Kamera se v HA objeví sama (MQTT discovery) jako zařízení s názvem kamery (záložka Systém): režim den/noc, IR přísvit, LED, otočení, zrcadlení, hlasitost, jas/kontrast/sytost/ostrost a tlačítko pro každý zvuk.</p>
+  <p class="hint" data-en="Topics:">Témata:</p><code id="mtop"></code></div>
+</div></section>
+
+<section id="t-sys" class="hide"><div class="grid">
+ <div class="card"><h3 data-en="Camera name">Název kamery</h3><div class="f">
+  <input type="text" id="yname" maxlength="40">
+  <p class="hint" data-en="Shown in this page and used as the device name in Home Assistant (MQTT).">Zobrazuje se na této stránce a jako název zařízení v Home Assistant (MQTT).</p>
+  <div class="bt"><button class="btn" id="ynsave" data-en="Save name">Uložit název</button></div></div></div>
+ <div class="card"><h3 data-en="Camera">Kamera</h3>
+  <div class="row"><span>Firmware</span><b class="val" id="yfw">–</b></div>
+  <div class="row"><span>IP / ID</span><b class="val" id="yip">–</b></div>
+  <div class="row"><span data-en="Uptime">Běží</span><b class="val" id="yup">–</b></div>
+  <div class="row"><span data-en="Free RAM">Volná RAM</span><b class="val" id="ymem">–</b></div>
+  <div class="bt" style="margin-top:12px"><button class="btn sec" id="yrst" data-en="Restart">Restartovat</button><button class="btn red" id="ydef" data-en="Default image settings">Výchozí nastavení obrazu</button><button class="btn sec" id="yout" data-en="Log out">Odhlásit</button></div></div>
+ <div class="card"><h3 data-en="Password protection">Ochrana heslem</h3><div class="f">
+  <div class="row" style="padding-top:0"><span data-en="State">Stav</span><b class="val" id="pstate">–</b></div>
+  <input type="password" id="pold" autocomplete="current-password" placeholder="současné heslo" data-enp="current password">
+  <input type="password" id="pnew" autocomplete="new-password" placeholder="nové heslo (min. 6 znaků)" data-enp="new password (min. 6 characters)">
+  <div class="bt"><button class="btn" id="pgo"></button><button class="btn red" id="poff" data-en="Turn password off">Vypnout heslo</button></div></div></div>
+ <div class="card"><h3 data-en="Wi-Fi via QR code">Wi-Fi přes QR kód</h3>
+  <p class="hint" data-en="On the phone: Wi-Fi settings → network → Share (QR). Start scanning and hold the phone 20–40 cm in front of the camera. If the camera does not connect within ~40 s, the previous network is restored. Can also be started by holding the reset button for 2 s.">Na mobilu: nastavení Wi-Fi → síť → Sdílet (QR kód). Spusť hledání a podrž mobil 20–40 cm před kamerou. Když se kamera do ~40 s nepřipojí, vrátí se původní síť. Spustit jde i podržením reset tlačítka 2 s.</p>
+  <div class="row"><span data-en="State">Stav</span><b class="val" id="qst">–</b></div>
+  <div class="bt"><button class="btn" id="qgo" data-en="Start scanning (2 min)">Spustit hledání (2 min)</button><button class="btn sec" id="qno" data-en="Cancel">Zrušit</button></div></div>
+ <div class="card"><h3 data-en="Firmware update">Aktualizace firmwaru</h3><div class="f">
+  <input type="file" id="ofile" accept=".squashfs,.bin">
+  <div class="bar"><i id="obar"></i></div><div class="hint" id="oinfo" data-en="File ak_rtsp_firmware_*.squashfs (5 MB). MD5 is verified and the previous firmware is restored on error. Do not power off.">Soubor ak_rtsp_firmware_*.squashfs (5 MB). Ověří se MD5, při chybě se vrátí původní firmware. Nevypínej kameru.</div>
+  <button class="btn" id="ogo" disabled data-en="Upload and update">Nahrát a aktualizovat</button></div></div>
+ <div class="card"><h3 data-en="Reset button">Reset tlačítko</h3>
+  <div class="row"><span data-en="hold 2 s (1 beep)">držet 2 s (1 pípnutí)</span><small data-en="Wi-Fi via QR code (again = cancel)">Wi-Fi přes QR kód (znovu = zrušit)</small></div>
+  <div class="row"><span data-en="hold 5 s (2 beeps)">držet 5 s (2 pípnutí)</span><small data-en="clears the web password">smaže heslo webu</small></div>
+  <div class="row"><span data-en="hold 15 s (ding-ding-ding)">držet 15 s (ding-ding-ding)</span><small data-en="image + MQTT + password, restart">obraz + MQTT + heslo, restart</small></div>
+  <p class="hint" data-en="Wi-Fi is always kept.">Wi-Fi zůstává vždy zachovaná.</p></div>
+ <div class="card"><h3>leotech.cz</h3>
+  <p class="hint" data-en="Custom ak_rtsp firmware for the LSC Smart Connect camera – local RTSP, no cloud.">Vlastní firmware ak_rtsp pro kameru LSC Smart Connect – lokální RTSP bez cloudu.</p>
+  <div class="bt"><a class="btn sec" href="https://leotech.cz" target="_blank" rel="noopener">🌐 leotech.cz</a><a class="btn sec" href="https://ko-fi.com/leotechcz" target="_blank" rel="noopener" data-en="☕ Support on Ko-fi">☕ Podpořit na Ko-fi</a></div></div>
+</div></section>
+<footer><span>ak_rtsp custom firmware</span><a href="https://leotech.cz" target="_blank" rel="noopener">leotech.cz</a><a href="https://ko-fi.com/leotechcz" target="_blank" rel="noopener">☕ Ko-fi</a></footer>
+</main>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let S=null,busy=0,pcm=null,L='cs';
+try{L=localStorage.getItem('lang')||''}catch(e){}if(!L)L=((navigator.languages&&navigator.languages[0])||navigator.language||'cs').toLowerCase().startsWith('cs')?'cs':'en';
+const EN=L=='en',T=(c,e)=>EN?e:c;
+const ERR={badpass:'Wrong password',short:'Password must have at least 6 characters',toomany:'Too many attempts, wait a moment',oldbad:'Current password does not match',
+ long:'Sound too long (max 20 s)',nospace:'Not enough space in the camera',builtin:'Built-in sound cannot be changed',badname:'Invalid name',notfound:'Sound not found',
+ param:'Parameter not allowed',value:'Value cannot be set',badchars:'Invalid characters',already:'Password already set'};
+const em=j=>EN?(ERR[j.code]||j.err||'error'):(j.err||'chyba');
+function i18n(){document.documentElement.lang=L;$('#lang').textContent=EN?'CZ':'EN';
+ $$('[data-en]').forEach(e=>{if(e.dataset.cs===undefined)e.dataset.cs=e.textContent;e.textContent=EN?e.dataset.en:e.dataset.cs});
+ $$('[data-enp]').forEach(e=>{if(e.dataset.csp===undefined)e.dataset.csp=e.placeholder;e.placeholder=EN?e.dataset.enp:e.dataset.csp})}
+$('#lang').onclick=()=>{L=EN?'cs':'en';try{localStorage.setItem('lang',L)}catch(e){}location.reload()};
+function toast(m,e){const t=$('#toast');t.textContent=m;t.className='show'+(e?' err':'');clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2600)}
+async function req(path,body,type){const o={method:body===undefined?'GET':'POST',credentials:'same-origin'};
+ if(body!==undefined){o.body=body;o.headers={'Content-Type':type||'application/x-www-form-urlencoded'}}
+ const r=await fetch('/api/'+path,o);let j={};try{j=await r.json()}catch(e){}j._s=r.status;return j}
+const enc=o=>Object.entries(o).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+async function api(p,o){const j=await req(p,enc(o||{}));if(j._s==401){showLogin(0);return j}if(!j.ok)toast(em(j),1);return j}
+async function set(p,v){const j=await api('set',{param:p,value:v});if(j.ok){toast(T('Uloženo','Saved'));load()}}
+function showLogin(setup){$('#login').classList.add('show');$('#lt').textContent=setup?T('Nastavení přístupu','Access setup'):T('Přihlášení ke kameře','Camera login');
+ $('#lsetup').classList.toggle('hide',!setup);$('#lp2').classList.toggle('hide',!setup);
+ $('#lp').placeholder=setup?T('Heslo (nepovinné)','Password (optional)'):T('Heslo','Password');
+ $('#lb').textContent=setup?T('Uložit','Save'):T('Přihlásit','Log in');$('#lb').dataset.setup=setup?1:0;setTimeout(()=>$('#lp').focus(),50)}
+$('#lb').onclick=async()=>{const s=$('#lb').dataset.setup=='1',p=$('#lp').value;
+ if(s&&p!==$('#lp2').value){toast(T('Hesla se neshodují','Passwords do not match'),1);return}
+ if(s&&!p&&!confirm(T('Pokračovat bez hesla? Stránku pak může otevřít kdokoli v síti.','Continue without a password? Anyone on the network can then open this page.')))return;
+ const j=await req(s?'setup':'login',enc({pass:p}));if(j.ok){$('#login').classList.remove('show');$('#lp').value=$('#lp2').value='';load()}else toast(em(j),1)};
+$('#lp').onkeydown=$('#lp2').onkeydown=e=>{if(e.key=='Enter')$('#lb').click()};
+$$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(x=>x.classList.toggle('on',x==b));$$('main section').forEach(s=>s.classList.toggle('hide',s.id!='t-'+b.dataset.t))});
+$$('.seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.onclick=()=>set(g.dataset.p,b.dataset.v)));
+$$('.sw input[data-p]').forEach(c=>c.onchange=()=>set(c.dataset.p,c.checked?'on':'off'));
+$$('input[type=range][data-p]').forEach(r=>{r.oninput=()=>r.nextElementSibling.textContent=r.value;r.onchange=()=>set(r.dataset.p,r.value)});
+function fmtUp(s){const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return(d?d+' d ':'')+h+' h '+m+' min'}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function load(){const j=await req('state');if(j.setup){showLogin(1);return}if(j._s==401){showLogin(0);return}if(!j.ok)return;S=j;const p=j.p;
+ $$('.seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',p[g.dataset.p]==b.dataset.v)));
+ $$('.sw input[data-p]').forEach(c=>c.checked=p[c.dataset.p]=='on');
+ $$('input[type=range][data-p]').forEach(r=>{if(document.activeElement!==r){r.value=p[r.dataset.p];r.nextElementSibling.textContent=p[r.dataset.p]}});
+ const night=p['night.state']=='night';$('#snight').textContent=night?T('noc','night'):T('den','day');$('#sir').textContent=p['ir.state']=='on'?T('ano','yes'):T('ne','no');
+ $('#pnight').textContent=night?T('☾ noc','☾ night'):T('☀ den','☀ day');
+ const m=j.mqtt;$('#pmqtt').textContent='MQTT '+(m.connected?'✓':m.enabled?'✗':T('vyp','off'));$('#pmqtt').className='pill '+(m.connected?'ok':m.enabled?'bad':'');
+ const nm=m.name||T('Kamera','Camera');$('#pfw').textContent=j.fw.split(' ')[0];$('#hname').textContent=nm;$('#hsub').textContent=j.ip+' · LSC Smart Connect · ak_rtsp';document.title=nm+' · leotech.cz';
+ if(document.activeElement!==$('#yname'))$('#yname').value=m.name;
+ $('#rtsp').textContent='rtsp://'+j.ip+':554/main_ch';
+ $('#ffcmd').textContent='ffmpeg -re -i zvuk.mp3 -ar 8000 -ac 1 -f s16le tcp://'+j.ip+':8093';
+ $('#ffmic').textContent='ffmpeg -f dshow -i audio="Mikrofon" -ar 8000 -ac 1 -f s16le tcp://'+j.ip+':8093';
+ $('#haex').textContent='action: mqtt.publish\ndata:\n  topic: '+m.base+'/play\n  payload: zvonek_brana';
+ $('#mtop').textContent=m.base+'/status        online / offline\n'+m.base+'/<key>/set     '+T('příkazy','commands')+'\n'+m.base+'/play          ← '+T('název zvuku','sound name')+'\n'+m.base+'/stop   '+m.base+'/restart';
+ if(!busy){$('#men').checked=!!m.enabled;$('#mhost').value=m.host;$('#mport').value=m.port;$('#muser').value=m.user;
+  $('#mpass').placeholder=m.has_pass?T('heslo (uloženo – prázdné = beze změny)','password (stored – empty = keep)'):T('heslo','password')}
+ $('#mstat').textContent=EN?(m.connected?'connected':m.enabled?m.status:'disabled'):m.status;$('#mstat').style.color=m.connected?'var(--ok)':m.enabled?'var(--bad)':'var(--mut)';
+ let h='';j.builtin.forEach(n=>h+=`<div class="snd"><span class="n">${esc(n)}</span><span class="tag">${T('vestavěný','built-in')}</span><button class="btn sec sm" onclick="play('${esc(n)}')">▶</button><button class="btn red sm" onclick="del('${esc(n)}',1)">✕</button></div>`);
+ j.user.forEach(u=>h+=`<div class="snd"><span class="n">${esc(u.n)}</span><span class="hint">${u.s} s</span><button class="btn sec sm" onclick="play('${esc(u.n)}')">▶</button><button class="btn red sm" onclick="del('${esc(u.n)}')">✕</button></div>`);
+ $('#slist').innerHTML=h;$('#sfree').textContent=T('Volné místo pro vlastní zvuky: ','Free space for own sounds: ')+Math.round(j.free/1024)+' kB (≈ '+Math.max(0,Math.floor((j.free-8192)/4000))+' s)';
+ $('#yfw').textContent=j.fw;$('#yip').textContent=j.ip+' / '+j.id;$('#yup').textContent=fmtUp(j.uptime);$('#ymem').textContent=Math.round(j.mem_free_kb/1024)+' MB';
+ const pw=j.auth=='pass';$('#pstate').textContent=pw?T('zapnuto','on'):T('vypnuto – přístup bez hesla','off – no password');$('#pstate').style.color=pw?'var(--ok)':'var(--mut)';
+ $('#pold').classList.toggle('hide',!pw);$('#poff').classList.toggle('hide',!pw);$('#yout').classList.toggle('hide',!pw);
+ if(j.qr){$('#qst').textContent=j.qr.running?T('hledám QR kód…','scanning…'):(j.qr.status=='idle'?'–':j.qr.status);$('#qgo').disabled=!!j.qr.running}
+ $('#pgo').textContent=pw?T('Změnit heslo','Change password'):T('Zapnout heslo','Turn password on')}
+async function play(n){const r=await fetch('/api/play?name='+encodeURIComponent(n),{method:'POST',credentials:'same-origin'});if(r.ok)toast('▶ '+n);else toast(T('nelze přehrát','cannot play'),1)}
+async function del(n,b){if(!confirm(T('Smazat zvuk ','Delete sound ')+n+'?'+(b?T(' (vestavěný – půjde obnovit)',' (built-in – can be restored)'):'')))return;const r=await fetch('/api/delete?name='+encodeURIComponent(n),{method:'POST',credentials:'same-origin'});const j=await r.json();j.ok?toast(T('Smazáno','Deleted')):toast(em(j),1);load()}
+function slug(s){return s.replace(/\.[^.]+$/,'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9_-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,40)}
+$('#ffile').onchange=async e=>{const f=e.target.files[0];pcm=null;$('#fsave').disabled=$('#fplay').disabled=true;if(!f)return;
+ $('#fname').value=slug(f.name);$('#finfo').textContent=T('Převádím…','Converting…');
+ try{const ab=await f.arrayBuffer();const AC=window.AudioContext||window.webkitAudioContext;const ac=new AC();const buf=await ac.decodeAudioData(ab);if(ac.close)ac.close();
+  const dur=Math.min(buf.duration,S?S.max_sec:20);const len=Math.ceil(dur*8000);
+  const oc=new OfflineAudioContext(1,len,8000);const src=oc.createBufferSource();src.buffer=buf;src.connect(oc.destination);src.start();
+  const out=(await oc.startRendering()).getChannelData(0);let pk=0;for(let i=0;i<out.length;i++)pk=Math.max(pk,Math.abs(out[i]));
+  const g=$('#fnorm').checked&&pk>0.01?0.95/pk:1;pcm=new Int16Array(len);for(let i=0;i<len;i++)pcm[i]=Math.max(-32768,Math.min(32767,Math.round(out[i]*g*32767)));
+  $('#finfo').textContent=T('Připraveno: ','Ready: ')+dur.toFixed(1)+' s'+(buf.duration>dur?T(' (oříznuto z ',' (trimmed from ')+buf.duration.toFixed(1)+' s)':'')+T(', v kameře zabere ~',', uses ~')+Math.ceil(len/2/1024)+' kB';$('#fsave').disabled=$('#fplay').disabled=false}
+ catch(err){$('#finfo').textContent=T('Soubor nelze přečíst: ','Cannot read file: ')+err}};
+async function sendPcm(url){const r=await fetch(url,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/octet-stream'},body:pcm.buffer});return await r.json().catch(()=>({}))}
+$('#fplay').onclick=async()=>{const j=await sendPcm('/api/playraw');j.ok?toast(T('▶ přehrávám','▶ playing')):toast(em(j),1)};
+$('#fsave').onclick=async()=>{const n=$('#fname').value.trim();if(!/^[a-zA-Z0-9_-]{1,40}$/.test(n)){toast(T('Neplatný název','Invalid name'),1);return}
+ $('#fsave').disabled=true;const j=await sendPcm('/api/sound?name='+n);$('#fsave').disabled=false;if(j.ok){toast(T('Uloženo: ','Saved: ')+n);load()}else toast(em(j),1)};
+$('#men').onchange=()=>busy=1;['#mhost','#mport','#muser','#mpass'].forEach(s=>$(s).oninput=()=>busy=1);
+$('#msave').onclick=async()=>{const j=await api('mqtt',{enabled:$('#men').checked?1:0,host:$('#mhost').value.trim(),port:$('#mport').value||1883,user:$('#muser').value.trim(),pass:$('#mpass').value});
+ if(j.ok){toast(T('Uloženo, připojuji…','Saved, connecting…'));$('#mpass').value='';busy=0;setTimeout(load,3000)}};
+$('#mclr').onclick=async()=>{if(!confirm(T('Smazat uložené MQTT heslo?','Delete the stored MQTT password?')))return;const j=await api('mqtt',{enabled:$('#men').checked?1:0,host:$('#mhost').value,port:$('#mport').value,user:$('#muser').value,clearpass:1});if(j.ok){toast(T('Heslo smazáno','Password deleted'));busy=0;load()}};
+async function snap(){try{const r=await fetch('/api/frame',{credentials:'same-origin'});if(!r.ok)return;const b=new Uint8Array(await r.arrayBuffer());
+ const W=640,H=360,cv=$('#cv'),cx=cv.getContext('2d'),im=cx.createImageData(W,H),d=im.data,U=W*H;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const Y=b[y*W+x],i=U+(y>>1)*W+(x&~1),u=b[i]-128,v=b[i+1]-128,o=(y*W+x)*4;
+  d[o]=Y+1.402*v;d[o+1]=Y-0.344*u-0.714*v;d[o+2]=Y+1.772*u;d[o+3]=255}cx.putImageData(im,0,0)}catch(e){}}
+$('#cvb').onclick=snap;setInterval(()=>{if($('#cva').checked&&!document.hidden)snap()},1000);
+$('#qgo').onclick=async()=>{const j=await api('qr');if(j.ok){toast(T('Hledám QR kód…','Scanning for QR code…'));load()}};
+$('#qno').onclick=async()=>{await api('qr_cancel');load()};
+$('#srest').onclick=async()=>{const j=await api('restore_sounds');if(j.ok){toast(T('Vestavěné zvuky obnoveny','Built-in sounds restored'));load()}};
+$('#ynsave').onclick=async()=>{const j=await api('name',{name:$('#yname').value.trim()});if(j.ok){toast(T('Název uložen','Name saved'));load()}};
+$('#pgo').onclick=async()=>{const n=$('#pnew').value;if(n.length<6){toast(EN?ERR.short:'Heslo musí mít aspoň 6 znaků',1);return}
+ const j=await api('password',{old:$('#pold').value,new:n});if(j.ok){toast(T('Heslo nastaveno','Password set'));$('#pold').value=$('#pnew').value='';showLogin(0)}};
+$('#poff').onclick=async()=>{if(!confirm(T('Vypnout heslo? Stránku pak může otevřít kdokoli v síti.','Turn the password off? Anyone on the network can then open this page.')))return;
+ const j=await api('password',{old:$('#pold').value,new:''});if(j.ok){toast(T('Heslo vypnuto','Password off'));$('#pold').value='';load()}};
+$('#yrst').onclick=async()=>{if(confirm(T('Restartovat kameru?','Restart the camera?'))){await api('restart');toast(T('Restartuji…','Restarting…'))}};
+$('#ydef').onclick=async()=>{if(confirm(T('Vrátit nastavení obrazu na výchozí a restartovat?','Reset image settings to defaults and restart?'))){await api('defaults');toast(T('Restartuji…','Restarting…'))}};
+$('#yout').onclick=async()=>{await api('logout');showLogin(0)};
+$('#ofile').onchange=e=>{$('#ogo').disabled=!e.target.files[0]};
+$('#ogo').onclick=()=>{const f=$('#ofile').files[0];if(!f||!confirm(T('Nahrát firmware ','Upload firmware ')+f.name+'?'))return;$('#ogo').disabled=true;
+ const x=new XMLHttpRequest();x.open('POST','/api/ota');x.upload.onprogress=e=>{if(e.lengthComputable){$('#obar').style.width=(e.loaded/e.total*100)+'%';$('#oinfo').textContent=T('Nahrávám ','Uploading ')+Math.round(e.loaded/e.total*100)+' %'}};
+ x.upload.onload=()=>$('#oinfo').textContent=T('Ověřuji a zapisuji do flash (~30 s), nevypínej kameru…','Verifying and writing flash (~30 s), do not power off…');
+ x.onload=()=>{let j={};try{j=JSON.parse(x.responseText)}catch(e){}if(j.ok){$('#oinfo').textContent=T('Hotovo ✓ kamera se restartuje, stránka se za minutu obnoví.','Done ✓ the camera restarts, the page reloads in a minute.');setTimeout(()=>location.reload(),70000)}else{$('#oinfo').textContent=T('Chyba: ','Error: ')+(em(j)||j.log||x.status);$('#ogo').disabled=false}};
+ x.onerror=()=>{$('#oinfo').textContent=T('Spojení přerušeno','Connection lost');$('#ogo').disabled=false};x.send(f)};
+i18n();load();snap();setInterval(()=>{if(!document.hidden&&!$('#login').classList.contains('show'))load()},5000);
+</script></body></html>

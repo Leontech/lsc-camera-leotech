@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LSC 3215672.3 SD card tool · leotech.cz</title>
+<link rel="icon" type="image/svg+xml" href="web/favicon.svg">
+<style>
+:root{--brand:#1A90FF;--hi:#7CC6FF;--fg:#E4ECF7;--mut:#8EA3BE;--bg:#08111C;--card:#0F1C2C;--line:#1E3350;--ok:#2BD47D;--bad:#FF5A6A;--warn:#FFB547}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#10294a 0,var(--bg) 60%) fixed;color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--hi)}header{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+header img{height:34px;filter:brightness(0) invert(1)}header .t{font-weight:600}.sp{margin-left:auto;display:flex;gap:8px}
+.pill{font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:#13243A;color:var(--hi);cursor:pointer;text-decoration:none}
+main{max-width:860px;margin:0 auto;padding:22px}
+.card{background:linear-gradient(180deg,var(--card),#0c1826);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:16px}
+.card h2{margin:0 0 10px;font-size:16px;color:var(--hi)}.warn{border-color:#5a4520;background:#1f1a10}.warn h2{color:var(--warn)}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}.btn:disabled{opacity:.45;cursor:default}
+.hint{color:var(--mut);font-size:13px}code{background:#0a1522;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+#log{font:12.5px ui-monospace,Consolas,monospace;background:#0a1522;border:1px solid var(--line);border-radius:10px;padding:10px;white-space:pre-wrap;max-height:260px;overflow:auto;color:#cfe0f5}
+.ok{color:var(--ok)}.bad{color:var(--bad)}label.chk{display:flex;gap:10px;align-items:flex-start}
+ol li{margin:4px 0}table{border-collapse:collapse;width:100%}td{padding:4px 6px;border-bottom:1px dashed #1a2d46;vertical-align:top}
+footer{color:var(--mut);font-size:12.5px;text-align:center;padding:20px}
+</style></head><body>
+<header><a href="https://leotech.cz"><img src="web/leotech_logo.svg" alt="leotech.cz"></a><div><div class="t" data-cs="Příprava SD karty – LSC Smart Connect 3215672.3">SD card tool – LSC Smart Connect 3215672.3</div><div class="hint">ak_rtsp · leotech edition</div></div>
+<div class="sp"><a class="pill" href="https://github.com/Leontech/lsc-camera-leotech">GitHub</a><a class="pill" href="https://ko-fi.com/leotechcz">☕ Ko-fi</a><span class="pill" id="lang">CZ</span></div></header>
+<main>
+<div class="card warn"><h2 data-cs="⚠️ Na vlastní riziko">⚠️ At your own risk</h2>
+<p data-cs="Nahrání vlastního firmwaru může kameru trvale zničit a ukončit záruku. Vše je poskytováno „tak jak je“, bez jakékoli záruky. Autoři nenesou žádnou odpovědnost za škody ani jiné následky.">Flashing custom firmware can permanently brick the camera and void the warranty. Everything is provided "AS IS", without any warranty. The authors accept no responsibility or liability for any damage or other consequences.</p>
+<label class="chk"><input type="checkbox" id="agree"><span data-cs="Rozumím a souhlasím – postupuji na vlastní riziko.">I understand and agree – I proceed at my own risk.</span></label></div>
+
+<div class="card"><h2 data-cs="1 · Kamera">1 · Camera</h2>
+<table><tr><td data-cs="Model">Model</td><td>Action <b>LSC Smart Connect</b> indoor IP camera 1080p, item <b>3215672</b></td></tr>
+<tr><td data-cs="Verze (štítek „No.“)">Version (label "No.")</td><td><b>3215672.3</b> <span class="hint" data-cs="(testováno; .1/.2 pravděpodobně také; samotné 3215672 bez přípony je jiná kamera)">(tested; .1/.2 probably too; plain 3215672 without suffix is a different camera)</span></td></tr>
+<tr><td>SoC</td><td>Anyka AK3918AV130</td></tr></table></div>
+
+<div class="card"><h2 data-cs="2 · Karta">2 · Card</h2>
+<ol><li data-cs="microSD karta do 32 GB, naformátovaná na FAT32 (Windows: pravé tlačítko → Formátovat → FAT32).">microSD card up to 32 GB, formatted as FAT32 (Windows: right click → Format → FAT32).</li>
+<li data-cs="Prohlížeč Chrome nebo Edge na počítači (potřebuje přístup ke složce karty).">Chrome or Edge on a computer (needs folder access to the card).</li></ol></div>
+
+<div class="card"><h2 data-cs="3 · Firmware">3 · Firmware</h2>
+<p class="hint" data-cs="Obraz ak_rtsp_firmware_*.squashfs (5 MB) sestavený ze zálohy tvé kamery – návod v docs/BUILD.md. Hotový obraz se nesmí veřejně šířit, protože obsahuje části původního firmwaru výrobce.">The ak_rtsp_firmware_*.squashfs image (5 MB) built from your camera's backup – see docs/BUILD.md. A ready image cannot be published because it contains parts of the manufacturer's original firmware.</p>
+<input type="file" id="img" accept=".squashfs"> <span id="imginfo" class="hint"></span>
+<p class="hint"><span data-cs="Volitelně hlasové hlášky (*.adp, vygeneruješ skriptem sdkit/voice/make_voice.sh):">Optional voice prompts (*.adp, generate with sdkit/voice/make_voice.sh):</span> <input type="file" id="voice" accept=".adp" multiple></p></div>
+
+<div class="card"><h2 data-cs="4 · Zapsat na kartu">4 · Write the card</h2>
+<button class="btn" id="go" disabled data-cs="Vybrat kartu a zapsat">Choose card and write</button>
+<p class="hint" data-cs="Vyber kořen karty (např. E:\). Stránka stáhne SD skripty toolkitu přímo z GitHubu (tasarren/lsc-tuya-toolkit), přidá instalátor leotech a tvůj firmware.">Select the root of the card (e.g. E:\). The page downloads the toolkit SD scripts directly from GitHub (tasarren/lsc-tuya-toolkit) and adds the leotech installer and your firmware.</p>
+<div id="log"></div></div>
+
+<div class="card"><h2 data-cs="5 · V kameře">5 · In the camera</h2>
+<ol><li data-cs="Kameru vypni, vlož kartu, zapni. Asi po 30 s kamera promluví (anglicky + česky, pokud máš hlášky) a modrá LED zabliká.">Power off, insert the card, power on. After ~30 s the camera speaks (English + Czech, if you added voices).</li>
+<li data-cs="Nová kamera: nejdřív zálohuje původní firmware na kartu (leo/backup/&lt;MAC&gt;), pak zapíše nový (~30 s) a restartuje se.">New camera: it first backs up the original firmware to the card (leo/backup/&lt;MAC&gt;), then writes the new one (~30 s) and restarts.</li>
+<li data-cs="Neznámá kamera nebo verze: nic se nezapíše.">Unknown camera or version: nothing is written.</li>
+<li data-cs="Kartu vyndej a zálohu z leo/backup si ulož do PC!">Remove the card and keep the backup from leo/backup on your PC!</li>
+<li data-cs="Wi-Fi: podrž reset tlačítko 2 s a ukaž kameře QR kód Wi-Fi z mobilu (Nastavení Wi-Fi → Sdílet).">Wi-Fi: hold the reset button for 2 s and show the camera your phone's Wi-Fi QR code (Wi-Fi settings → Share).</li>
+<li data-cs="Web kamery: http://&lt;IP kamery&gt;/ (IP najdeš v routeru).">Camera web page: http://&lt;camera IP&gt;/ (find the IP in your router).</li></ol>
+<p class="hint" data-cs="Log instalace: logs/leo_autoflash.log na kartě.">Installer log: logs/leo_autoflash.log on the card.</p></div>
+</main>
+<footer>© leotech.cz · MIT · <a href="https://github.com/Leontech/lsc-camera-leotech">GitHub</a> · <a href="https://ko-fi.com/leotechcz">☕ Ko-fi</a></footer>
+<script>
+const $=s=>document.querySelector(s);
+let L=((navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().startsWith('cs')?'cs':'en';
+try{L=localStorage.getItem('lang')||L}catch(e){}
+function i18n(){document.querySelectorAll('[data-cs]').forEach(e=>{if(e.dataset.en===undefined)e.dataset.en=e.innerHTML;e.innerHTML=L=='cs'?e.dataset.cs:e.dataset.en});$('#lang').textContent=L=='cs'?'EN':'CZ';document.documentElement.lang=L}
+$('#lang').onclick=()=>{L=L=='cs'?'en':'cs';try{localStorage.setItem('lang',L)}catch(e){}i18n()};i18n();
+const T=(cs,en)=>L=='cs'?cs:en;
+const TOOLKIT='tasarren/lsc-tuya-toolkit', TK_SHA='396db8a835d9787b2997de038b48f645c837e754';
+const STOCK_MD5=['45f7b0ea5a8a92bc2defe9c1e4769a2a'];
+let img=null;
+function log(s,c){const d=document.createElement('div');d.textContent=s;if(c)d.className=c;$('#log').appendChild(d);$('#log').scrollTop=1e9}
+function upd(){$('#go').disabled=!($('#agree').checked&&img&&window.showDirectoryPicker)}
+$('#agree').onchange=upd;
+if(!window.showDirectoryPicker){log(T('Tento prohlížeč neumí zapisovat do složek – použij Chrome nebo Edge na PC.','This browser cannot write to folders – use Chrome or Edge on a computer.'),'bad')}
+$('#img').onchange=async e=>{img=null;const f=e.target.files[0];if(!f){upd();return}
+ const head=new Uint8Array(await f.slice(0,4).arrayBuffer());const magic=String.fromCharCode(...head);
+ if(f.size!==5242880||magic!=='hsqs'){$('#imginfo').textContent=T('✗ není to obraz 5 MB squashfs','✗ not a 5 MB squashfs image');$('#imginfo').className='bad'}
+ else{img=f;$('#imginfo').textContent='✓ '+f.name;$('#imginfo').className='ok'}upd()};
+async function put(dir,path,data){const parts=path.split('/');let d=dir;for(let i=0;i<parts.length-1;i++)d=await d.getDirectoryHandle(parts[i],{create:true});
+ const fh=await d.getFileHandle(parts[parts.length-1],{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
+async function gh(path){const r=await fetch(`https://raw.githubusercontent.com/${TOOLKIT}/${TK_SHA}/${path}`);if(!r.ok)throw new Error(path+' '+r.status);return new Uint8Array(await r.arrayBuffer())}
+const td=new TextDecoder(),te=new TextEncoder();
+$('#go').onclick=async()=>{let root;try{root=await window.showDirectoryPicker({mode:'readwrite',id:'lsc-sd'})}catch(e){return}
+ $('#go').disabled=true;$('#log').textContent='';
+ try{
+  for await(const [n] of root.entries()){if(/\.bin$/i.test(n)){log(T('Na kartě je soubor '+n+' – smaž ho (spustil by tovární aktualizaci).','The card contains '+n+' – delete it (it would trigger the vendor update).'),'bad');$('#go').disabled=false;return}}
+  log(T('Stahuji seznam souborů toolkitu…','Fetching toolkit file list…'));
+  const tree=await (await fetch(`https://api.github.com/repos/${TOOLKIT}/git/trees/${TK_SHA}?recursive=1`)).json();
+  const files=tree.tree.filter(t=>t.type==='blob'&&t.path.startsWith('sd_card/'));
+  for(const f of files){const rel=f.path.slice(8);let data=await gh(f.path);
+   if(rel==='custom/configs/hack.conf'){let s=td.decode(data);s=s.replace(/^TELNET=.*$/m,'TELNET=1').replace(/^TELNET_PORT=.*$/m,'TELNET_PORT=24').replace(/^OFFLINE=.*$/m,'OFFLINE=1').replace(/^ONVIF=.*$/m,'ONVIF=0');data=te.encode(s)}
+   if(rel==='custom/configs/wifi.conf')data=te.encode('MODE=saved\nDHCP=1\n');
+   if(rel==='custom/scripts/entrypoint.sh'){let s=td.decode(data);if(!s.includes('DECLOUD_ENTRYPOINT_LOCK')){const i=s.indexOf('\n');s=s.slice(0,i+1)+'# DECLOUD_ENTRYPOINT_LOCK\nmkdir /tmp/decloud_entrypoint.lock 2>/dev/null || exit 0\n'+s.slice(i+1)}data=te.encode(s)}
+   if(rel==='custom/scripts/wifi_apply.sh'){let s=td.decode(data);s=s.replace('    sta)','    saved)\n        log "SAVED: using /etc/config/wpa_supplicant.conf"\n        if [ -f /etc/config/wpa_supplicant.conf ]; then\n            stop_wifi_stack\n            ifconfig wlan0 up >/dev/null 2>&1 || true\n            wpa_supplicant -B -iwlan0 -Dnl80211 -c /etc/config/wpa_supplicant.conf >>"${LOG_FILE}" 2>&1 || true\n            udhcpc -i wlan0 -x hostname:IPCamera >>"${LOG_FILE}" 2>&1 &\n        fi\n        ;;\n    sta)');data=te.encode(s)}
+   if(rel==='hack.sh'){let s=td.decode(data);s+='\n/bin/sh "${SCRIPTS_DIR}/entrypoint.sh" >/dev/null 2>&1 &\n/bin/sh /tmp/sd/leo/leo_autoflash.sh >/dev/null 2>&1 &\n';data=te.encode(s)}
+   await put(root,rel,data);log('✓ '+rel)}
+  await put(root,'custom/state/dump.done',new Uint8Array(0));
+  for(const k of ['leo_autoflash.sh','leo_say','flash_tool','custom_md5.txt']){const r=await fetch('kit/'+k);if(!r.ok)throw new Error('kit/'+k);await put(root,'leo/'+k,new Uint8Array(await r.arrayBuffer()));log('✓ leo/'+k)}
+  await put(root,'leo/stock_md5.txt',te.encode(STOCK_MD5.map(m=>m+'  stock 3215672.3').join('\n')+'\n'));
+  await put(root,'leo/firmware/'+img.name,img);log('✓ leo/firmware/'+img.name);
+  for(const v of $('#voice').files){await put(root,'leo/voice/'+v.name,v);log('✓ leo/voice/'+v.name)}
+  log(T('Hotovo – kartu bezpečně odeber a vlož do vypnuté kamery.','Done – safely eject the card and insert it into the powered-off camera.'),'ok');
+ }catch(e){log('✗ '+e,'bad')}
+ $('#go').disabled=false};
+</script></body></html>

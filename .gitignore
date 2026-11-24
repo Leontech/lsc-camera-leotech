@@ -1,0 +1,11 @@
+*.o
+src/ak_rtsp/ak_rtsp
+src/ak_rtsp/flash_tool
+src/ak_rtsp/web_html.h
+src/ak_rtsp/build_number.txt
+src/ak_rtsp/app_patched/
+src/ak_rtsp/app_extracted/
+src/smolrtsp/
+*.squashfs
+*.bin
+src/ak_rtsp/leo_sounds/
